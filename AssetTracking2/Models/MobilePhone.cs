@@ -13,5 +13,7 @@ namespace AssetTracking2.Models
         public string Model { get; set; } = null!;
         public int AssetId { get; set; }
         public Asset Asset { get; set; } = null!;
+
+        //public ICollection<PhoneDetails> PhoneDetails { get; set; } = null!;
     }
 }

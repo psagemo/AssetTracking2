@@ -11,7 +11,7 @@ namespace AssetTracking2.Models
         public int OfficeId { get; set; }
         public string Location { get; set; }
         public string Currency { get; set; }
-        public int AssetId { get; set; }
-        public Asset Asset { get; set; } = null!;
+        //public int AssetId { get; set; }
+        //public Asset Asset { get; set; } = null!;
     }
 }
