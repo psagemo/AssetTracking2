@@ -24,6 +24,20 @@ namespace AssetTracking2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Offices",
+                columns: table => new
+                {
+                    OfficeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Offices", x => x.OfficeId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Laptops",
                 columns: table => new
                 {
@@ -31,7 +45,8 @@ namespace AssetTracking2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Brand = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssetId = table.Column<int>(type: "int", nullable: false)
+                    AssetId = table.Column<int>(type: "int", nullable: false),
+                    OfficeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,6 +56,12 @@ namespace AssetTracking2.Migrations
                         column: x => x.AssetId,
                         principalTable: "Assets",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Laptops_Offices_OfficeId",
+                        column: x => x.OfficeId,
+                        principalTable: "Offices",
+                        principalColumn: "OfficeId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -52,7 +73,8 @@ namespace AssetTracking2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Brand = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssetId = table.Column<int>(type: "int", nullable: false)
+                    AssetId = table.Column<int>(type: "int", nullable: false),
+                    OfficeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,26 +85,11 @@ namespace AssetTracking2.Migrations
                         principalTable: "Assets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Offices",
-                columns: table => new
-                {
-                    OfficeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssetId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Offices", x => x.OfficeId);
                     table.ForeignKey(
-                        name: "FK_Offices_Assets_AssetId",
-                        column: x => x.AssetId,
-                        principalTable: "Assets",
-                        principalColumn: "Id",
+                        name: "FK_MobilePhones_Offices_OfficeId",
+                        column: x => x.OfficeId,
+                        principalTable: "Offices",
+                        principalColumn: "OfficeId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -92,14 +99,19 @@ namespace AssetTracking2.Migrations
                 column: "AssetId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Laptops_OfficeId",
+                table: "Laptops",
+                column: "OfficeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MobilePhones_AssetId",
                 table: "MobilePhones",
                 column: "AssetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offices_AssetId",
-                table: "Offices",
-                column: "AssetId");
+                name: "IX_MobilePhones_OfficeId",
+                table: "MobilePhones",
+                column: "OfficeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -111,10 +123,10 @@ namespace AssetTracking2.Migrations
                 name: "MobilePhones");
 
             migrationBuilder.DropTable(
-                name: "Offices");
+                name: "Assets");
 
             migrationBuilder.DropTable(
-                name: "Assets");
+                name: "Offices");
         }
     }
 }

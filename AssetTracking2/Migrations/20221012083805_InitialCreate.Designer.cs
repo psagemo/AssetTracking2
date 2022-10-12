@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetTracking2.Migrations
 {
     [DbContext(typeof(AssetTracker2Context))]
-    [Migration("20221012082718_InitialCreate")]
+    [Migration("20221012083805_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,9 +62,14 @@ namespace AssetTracking2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OfficeId")
+                        .HasColumnType("int");
+
                     b.HasKey("LaptopId");
 
                     b.HasIndex("AssetId");
+
+                    b.HasIndex("OfficeId");
 
                     b.ToTable("Laptops");
                 });
@@ -88,9 +93,14 @@ namespace AssetTracking2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OfficeId")
+                        .HasColumnType("int");
+
                     b.HasKey("MobilePhoneId");
 
                     b.HasIndex("AssetId");
+
+                    b.HasIndex("OfficeId");
 
                     b.ToTable("MobilePhones");
                 });
@@ -103,9 +113,6 @@ namespace AssetTracking2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OfficeId"), 1L, 1);
 
-                    b.Property<int>("AssetId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Currency")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -115,8 +122,6 @@ namespace AssetTracking2.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("OfficeId");
-
-                    b.HasIndex("AssetId");
 
                     b.ToTable("Offices");
                 });
@@ -129,7 +134,15 @@ namespace AssetTracking2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AssetTracking2.Models.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Asset");
+
+                    b.Navigation("Office");
                 });
 
             modelBuilder.Entity("AssetTracking2.Models.MobilePhone", b =>
@@ -140,18 +153,15 @@ namespace AssetTracking2.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Asset");
-                });
-
-            modelBuilder.Entity("AssetTracking2.Models.Office", b =>
-                {
-                    b.HasOne("AssetTracking2.Models.Asset", "Asset")
+                    b.HasOne("AssetTracking2.Models.Office", "Office")
                         .WithMany()
-                        .HasForeignKey("AssetId")
+                        .HasForeignKey("OfficeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Asset");
+
+                    b.Navigation("Office");
                 });
 #pragma warning restore 612, 618
         }

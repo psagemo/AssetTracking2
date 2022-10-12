@@ -11,8 +11,7 @@ namespace AssetTracking2.Models
         public int Id { get; set; }
         public int Price { get; set; }
         public DateTime PurchaseDate { get; set; }
-        public int OfficeId { get; set; }
-        public Office Office { get; set; } = null!;
+        
 
     }
 }
