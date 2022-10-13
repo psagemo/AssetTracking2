@@ -12,8 +12,8 @@ namespace AssetTracking2.Models
         public int? MobilePhoneId { get; set; }        
         public int? LaptopId { get; set; }        
         public int OfficeId { get; set; }
-        public virtual MobilePhone MobilePhone { get; set; }
-        public virtual Laptop Laptop { get; set; }
+        public virtual MobilePhone? MobilePhone { get; set; }
+        public virtual Laptop? Laptop { get; set; }
         public Office Office { get; set; } = null!;
 
     }
