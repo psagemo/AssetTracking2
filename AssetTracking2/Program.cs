@@ -43,6 +43,7 @@ TODO-list:
     - Print-Table functionality
     - Set price
     - Create if statments to check if offices already exists and if db is already populated
+    - Create assets from phones and laptops when populating db
     - CRUD
     
  */
@@ -83,7 +84,7 @@ void Main()
         string type = "";
         string brand = "";
         string model = "";
-        string office = "";
+        int office = 0;
         DateTime purchaseDate = new();
         int price = 0;
         int priceInUSD = 0;
@@ -101,7 +102,7 @@ void Main()
         {
             Console.WriteLine("Select what type of asset you would like to add:");
             Console.WriteLine("1. Phone");
-            Console.WriteLine("2. Computer");
+            Console.WriteLine("2. Laptop");
             Console.WriteLine();
             Exit(); // Method to print exit instructions
 
@@ -118,9 +119,9 @@ void Main()
             {
                 type = "Phone";
             }
-            else if (input.ToLower().Trim() == "computer" || input.ToLower().Trim() == "c" || input.ToLower().Trim() == "2")
+            else if (input.ToLower().Trim() == "Laptop" || input.ToLower().Trim() == "c" || input.ToLower().Trim() == "2")
             {
-                type = "Computer";
+                type = "Laptop";
             }
             // Error handling
             else
@@ -194,10 +195,10 @@ void Main()
                 }
             }
 
-            // Add new computer
-            else if (type == "Computer")
+            // Add new Laptop
+            else if (type == "Laptop")
             {
-                Console.WriteLine("Enter the number corresponding to the brand of the computer you would like to add. Or press enter to write the name manually");
+                Console.WriteLine("Enter the number corresponding to the brand of the Laptop you would like to add. Or press enter to write the name manually");
                 Console.WriteLine("1. MacBook");
                 Console.WriteLine("2. Asus");
                 Console.WriteLine("3. Lenovo");
@@ -285,7 +286,7 @@ void Main()
         }
 
         // Check if office, type, brand and model is set
-        if (office == "" && type != "" && brand != "" && model != "")
+        if (office == 0 && type != "" && brand != "" && model != "")
         {
             Console.WriteLine("Enter the number corresponding to the office the asset belongs to:");
             Console.WriteLine("1. USA");
@@ -302,15 +303,15 @@ void Main()
                 case "exit":
                     break;
                 case "1":
-                    office = "USA";
+                    office = 1;
                     currency = "USD";
                     break;
                 case "2":
-                    office = "Spain";
+                    office = 2;
                     currency = "EUR";
                     break;
                 case "3":
-                    office = "Sweden";
+                    office = 3;
                     currency = "SEK";
                     break;
 
@@ -325,7 +326,7 @@ void Main()
         }
 
         // Check if purchase date, type, model and office is set
-        if (purchaseDate == DateTime.MinValue && type != "" && model != "" && office != "")
+        if (purchaseDate == DateTime.MinValue && type != "" && model != "" && office != 0)
         {
             int year = 0;
             int month = 0;
@@ -445,7 +446,7 @@ void Main()
         }
 
         // Check if price is set
-        if (price == 0 && type != "" && brand != "" && model != "" && office != "")
+        if (price == 0 && type != "" && brand != "" && model != "" && office != 0)
         {
             Console.WriteLine("Enter the assets purchase price in USD");
             Exit(); // Method to print exit instructions
@@ -461,15 +462,15 @@ void Main()
             // Set price based on local currency or print error
             else if (int.TryParse(input.Trim(), out priceInUSD)) 
             {
-                if (office == "USA")
+                if (office == 1)
                 {
                     price = priceInUSD;
                 }
-                else if (office == "Spain")
+                else if (office == 2)
                 {
                     price = (int)USDtoEUR;
                 }
-                else if (office == "Sweden")
+                else if (office == 3)
                 {
                     price = (int)USDtoSEK;
                 }
@@ -486,36 +487,62 @@ void Main()
 
 
         // Create asset if all values are set
+        if (type != "" && brand != "" && office != 0 && purchaseDate != DateTime.MinValue && price != 0 && currency != "")
+        {
+            // Create new mobile phone
+            if (type == "Phone")
+            {
+                MobilePhone mobilePhone = new MobilePhone()
+                {
+                    Brand = brand,
+                    Model = model,
+                    Price = price,
+                    OfficeId = office,
+                    PurchaseDate = purchaseDate
+                };
+                context.MobilePhones.Add(mobilePhone);
 
-        /*------------------------------------------------------------------------*
-         *------------------------------------------------------------------------*
-         *----------------------------------TODO----------------------------------*
-         *------------------------------------------------------------------------*
-         *------------------------------------------------------------------------*
-         MobilePhone MotoroloMotoG60s = new MobilePhone()
-        {
-            Brand = "Motorola",
-            Model = "Moto G60s",
-            Price = 2499,
-            OfficeId = 3,
-            PurchaseDate = Convert.ToDateTime("2020-06-19")
-        };
-        context.MobilePhones.Add(MotoroloMotoG60s);
+                // Create asset from mobile phone
+            }
+
+            // Create new laptop
+            else if(type == "Laptop")
+            {
+                Laptop laptop = new Laptop()
+                {
+                    Brand = brand,
+                    Model = model,
+                    Price = price,
+                    OfficeId = office,
+                    PurchaseDate = purchaseDate
+                };
+                context.Laptops.Add(laptop);
+
+                // Create asset from laptop
+            }
+        }
+
         
-        Laptop Lenovo700 = new Laptop()
-        {
-            Brand = "Lenovo",
-            Model = "700",
-            Price = 599,
-            OfficeId = 2,
-            PurchaseDate = Convert.ToDateTime("2019-03-19")
-        };
-        context.Laptops.Add(Lenovo700);
+        
+        //Laptop Lenovo700 = new Laptop()
+        //{
+        //    Brand = "Lenovo",
+        //    Model = "700",
+        //    Price = 599,
+        //    OfficeId = 2,
+        //    PurchaseDate = Convert.ToDateTime("2019-03-19")
+        //};
+        //context.Laptops.Add(Lenovo700);
         
          
-         */
+         
     }
     // Print assets
+    /*------------------------------------------------------------------------*
+     *------------------------------------------------------------------------*
+     *----------------------------------TODO----------------------------------*
+     *------------------------------------------------------------------------*
+     *------------------------------------------------------------------------*/
     //var assets = from asset in context.Assets
 
 
