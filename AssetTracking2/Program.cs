@@ -37,15 +37,14 @@ Level 3
     Your application should have some reporting features.
 
 
-TODO-list:
-    X Start TODO-list
+TODO-list:    
     - Add-to-db functionallity
     - Read-from-db functionallity 
     - Print-Table functionality
     - Set price
     - Create if statments to check if offices already exists and if db is already populated
-    - Finish TODO-list
- 
+    - CRUD
+    
  */
 
 
@@ -458,7 +457,7 @@ void Main()
          *------------------------------------------------------------------------*/
     }
     // Print assets
-    var assets = from 
+    //var assets = from 
 
 
 }
