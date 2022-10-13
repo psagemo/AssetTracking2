@@ -1,13 +1,48 @@
 ﻿
 using AssetTracking2.Models;
 using AssetTracking2.Data;
-
-
+using System.Globalization;
 /*
- * 
- TODO-list:
-    - Update brand options
-    - Create add-to-db functionallity
+Level 1
+    - Create a console app that have the following classes and objects: 
+        * Laptop Computers 
+            - MacBook 
+            - Asus 
+            - Lenovo 
+        * Mobile Phones 
+            - Iphone 
+            - Samsung  
+            - Nokia  
+    You will need to create the appropriate fields, constructors and properties for each object, like purchase date, price, model name etc.
+    All assets needs to be stored in database using Entity Framework Core with Create and Read functionality. 
+
+Level 2
+    - Create a program to create a list of assets (inputs) where the final result is to write the following to the console:
+        * Sorted list with Class as primary (computers first, then phones)
+        * Then sorted by purchase date
+        * Mark any item *RED* if purchase date is less than 3 months away from 3 years. 
+    Your application should handle FULL CRUD.
+
+Level 3
+    - Add offices to the model: 
+        * You should be able to place items in 3 different offices around the world which will use the appropriate currency for that country. 
+        * You should be able to input values in dollars and convert them to each currency (based on todays currency charts) 
+        * When you write the list to the console:
+            - Sorted first by office
+            - Then Purchase date
+            - Items *RED* if date less than 3 months away from 3 years
+            - Items *Yellow* if date less than 6 months away from 3 years
+            - Each item should have currency according to country 
+    Your application should handle FULL CRUD.
+    Your application should have some reporting features.
+
+
+TODO-list:
+    X Start TODO-list
+    - Add-to-db functionallity
+    - Read-from-db functionallity 
+    - Print-Table functionality
+    - Set price
     - Create if statments to check if offices already exists and if db is already populated
     - Finish TODO-list
  
@@ -98,13 +133,15 @@ void Main()
         if (brand.Trim() == "" && type != "")
         {
             // Add new phone
+            // Samsung iPhone Google Nokia Motorola
             if (type == "Phone")
-            {
+            {              
                 Console.WriteLine("Enter the number corresponding to the brand of the phone you would like to add. Or press enter to write the name manually");
                 Console.WriteLine("1. iPhone");
                 Console.WriteLine("2. Motorola");
                 Console.WriteLine("3. Samsung");
                 Console.WriteLine("4. Nokia");
+                Console.WriteLine("5. Google");
                 Exit(); // Method to print exit instructions
 
                 string input = Console.ReadLine();
@@ -126,9 +163,16 @@ void Main()
                     case "4":
                         brand = "Nokia";
                         break;
+                    case "5":
+                        brand = "Google";
+                        break;
+
+                    // Prompt user for manual input
                     default:
                         Console.WriteLine("Please enter the name of the brand:");
                         input = Console.ReadLine();
+
+                        // Error handling
                         if (input.Trim() == "")
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
@@ -137,6 +181,8 @@ void Main()
                             Console.WriteLine();
                             break;
                         }
+
+                        // Set brand from input
                         else
                         {
                             brand = input;
@@ -153,8 +199,9 @@ void Main()
                 Console.WriteLine("2. Asus");
                 Console.WriteLine("3. Lenovo");
                 Console.WriteLine("4. HP");
+                Console.WriteLine("5. Acer");
                 Exit(); // Method to print exit instructions
-                string input = Console.ReadLine();
+                string input = Console.ReadLine();                             
 
                 // Set brand from options or manually
                 switch (input.ToLower().Trim())
@@ -174,6 +221,9 @@ void Main()
                         break;
                     case "4":
                         brand = "HP";
+                        break;
+                    case "5":
+                        brand = "Acer";
                         break;
 
                     // Prompt user for manual input
@@ -390,8 +440,27 @@ void Main()
             }
 
         }
+        // Check if price is set
+
+        /*------------------------------------------------------------------------*
+         *------------------------------------------------------------------------*
+         *----------------------------------TODO----------------------------------*
+         *------------------------------------------------------------------------*
+         *------------------------------------------------------------------------*/
+
+
+        // Create asset if all values are set
+
+        /*------------------------------------------------------------------------*
+         *------------------------------------------------------------------------*
+         *----------------------------------TODO----------------------------------*
+         *------------------------------------------------------------------------*
+         *------------------------------------------------------------------------*/
     }
-    
+    // Print assets
+    var assets = from 
+
+
 }
 
 // Method to add Offices to context
@@ -422,14 +491,14 @@ static void AddOffices(AssetTracker2Context context)
 
 static void PopulateDbOption(AssetTracker2Context context)
 {
-    /*----------- TODO -----------
+    /*----------- TODO -----------     
         if statement to check if database is already populated
      */
     Console.WriteLine("Would you like to populate the database with pre-generated assets? [Y/N]");
     string input = Console.ReadLine();
     if(input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
     {
-        // Adding Mobilephones
+        // Adding Mobilephones        
         MobilePhone SamsungGalaxyS20 = new MobilePhone()
         {
             Brand = "Samsung",
@@ -470,7 +539,15 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2018-01-09")
         };
-
+        MobilePhone MotoroloMotoG60s = new MobilePhone()
+        {
+            Brand = "Motorola",
+            Model = "Moto G60s",
+            Price = 2499,
+            OfficeId = 3,
+            PurchaseDate = Convert.ToDateTime("2020-06-19")
+        };
+        
         // Adding Laptops
         Laptop Lenovo700 = new Laptop()
         {
@@ -504,6 +581,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2020-04-02")
         };
+        Laptop AsusZenbookProDuo = new Laptop()
+        {
+            Brand = "Asus",
+            Model = "Zenbook Pro Duo",
+            Price = 3199,
+            OfficeId = 2,
+            PurchaseDate = Convert.ToDateTime("2022-07-05")
+        };
     }
 
     // Do nothing/exit method if user types 'n' or 'no'
@@ -515,6 +600,31 @@ static void PopulateDbOption(AssetTracker2Context context)
         Console.WriteLine("Wrong input, answer must 'Y' , 'Yes' , 'N' or 'No'. ");
         PopulateDbOption(context);
     }
+}
+
+void PrintProduct() // assets
+{
+    // Print product in red if purchase date is within 3 months from being 3 years old
+    //if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+    //{
+    //    Console.ForegroundColor = ConsoleColor.Red;
+    //    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + USD.ToString().PadRight(20) + Currency.PadRight(20) + LocalPriceToday + " " + "(" + Currency + ")");
+    //    Console.ResetColor();
+    //}
+
+    // Print product in yellow if purchase date is within 6 months from being 3 years old
+    //else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
+    //{
+    //    Console.ForegroundColor = ConsoleColor.Yellow;
+    //    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + USD.ToString().PadRight(20) + Currency.PadRight(20) + LocalPriceToday + " " + "(" + Currency + ")");
+    //    Console.ResetColor();
+    //}
+
+    // Print product
+    //else
+    //{
+    //    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + USD.ToString().PadRight(20) + Currency.PadRight(20) + LocalPriceToday + " " + "(" + Currency + ")");
+    //}
 }
 
 // Print exit instructions to user
