@@ -9,6 +9,7 @@ namespace AssetTracking2.Models
     internal class Asset
     {
         public int Id { get; set; }
+        public string Type { get; set; } = null!;
         public int? MobilePhoneId { get; set; }        
         public int? LaptopId { get; set; }        
         public int OfficeId { get; set; }

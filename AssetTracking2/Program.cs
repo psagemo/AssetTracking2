@@ -484,8 +484,6 @@ void Main()
             }
         }
 
-
-
         // Create asset if all values are set
         if (type != "" && brand != "" && office != 0 && purchaseDate != DateTime.MinValue && price != 0 && currency != "")
         {
@@ -505,6 +503,7 @@ void Main()
                 // Create asset from mobile phone
                 Asset asset = new Asset()
                 {
+                    Type = "MobilePhone",
                     MobilePhoneId = mobilePhone.Id,
                     OfficeId = mobilePhone.OfficeId
                 };
@@ -527,27 +526,13 @@ void Main()
                 // Create asset from laptop
                 Asset asset = new Asset()
                 {
+                    Type = "Laptop",
                     LaptopId = laptop.Id,
                     OfficeId = laptop.OfficeId
                 };
                 context.Assets.Add(asset);
             }
-        }
-
-        
-        
-        //Laptop Lenovo700 = new Laptop()
-        //{
-        //    Brand = "Lenovo",
-        //    Model = "700",
-        //    Price = 599,
-        //    OfficeId = 2,
-        //    PurchaseDate = Convert.ToDateTime("2019-03-19")
-        //};
-        //context.Laptops.Add(Lenovo700);
-        
-         
-         
+        }                       
     }
     // Print assets
     /*------------------------------------------------------------------------*
@@ -556,6 +541,8 @@ void Main()
      *------------------------------------------------------------------------*
      *------------------------------------------------------------------------*/
     //var assets = from asset in context.Assets
+    //             where asset != null
+    //             orderby asset.Type
 
 
 }
@@ -588,9 +575,14 @@ static void AddOffices(AssetTracker2Context context)
 
 static void PopulateDbOption(AssetTracker2Context context)
 {
+
+
     /*----------- TODO -----------     
         if statement to check if database is already populated
      */
+
+
+
     Console.WriteLine("Would you like to populate the database with pre-generated assets? [Y/N]");
     string input = Console.ReadLine();
     if(input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
@@ -608,6 +600,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset SamsungGalaxyS20Asset = new Asset()
         {
+            Type = "MobilePhone",
             MobilePhoneId = SamsungGalaxyS20.Id,
             OfficeId = SamsungGalaxyS20.OfficeId
         };
@@ -625,6 +618,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset iPhone12Asset = new Asset()
         {
+            Type = "MobilePhone",
             MobilePhoneId = iPhone12.Id,
             OfficeId = iPhone12.OfficeId
         };
@@ -642,6 +636,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset GooglePixel6aAsset = new Asset()
         {
+            Type = "MobilePhone",
             MobilePhoneId = GooglePixel6a.Id,
             OfficeId = GooglePixel6a.OfficeId
         };
@@ -659,6 +654,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset NokiaG21Asset = new Asset()
         {
+            Type = "MobilePhone",
             MobilePhoneId = NokiaG21.Id,
             OfficeId = NokiaG21.OfficeId
         };
@@ -676,6 +672,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset iPhone8Asset = new Asset()
         {
+            Type = "MobilePhone",
             MobilePhoneId = iPhone8.Id,
             OfficeId = iPhone8.OfficeId
         };
@@ -693,6 +690,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset MotoroloMotoG60sAsset = new Asset()
         {
+            Type = "MobilePhone",
             MobilePhoneId = MotoroloMotoG60s.Id,
             OfficeId = MotoroloMotoG60s.OfficeId
         };
@@ -711,6 +709,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset Lenovo700Asset = new Asset()
         {
+            Type = "Laptop",
             LaptopId = Lenovo700.Id,
             OfficeId = Lenovo700.OfficeId
         };
@@ -718,6 +717,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Laptop MacBookAir = new Laptop()
         {
+            Type = "Laptop",
             Brand = "MacBook",
             Model = "Air",
             Price = 1599,
@@ -728,6 +728,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset MacBookAirAsset = new Asset()
         {
+            Type = "Laptop",
             LaptopId = MacBookAir.Id,
             OfficeId = MacBookAir.OfficeId
         };
@@ -745,6 +746,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset HPPavilion15Asset = new Asset()
         {
+            Type = "Laptop",
             LaptopId = HPPavilion15.Id,
             OfficeId = HPPavilion15.OfficeId
         };
@@ -762,6 +764,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset AcerAspire2Asset = new Asset()
         {
+            Type = "Laptop",
             LaptopId = AcerAspire2.Id,
             OfficeId = AcerAspire2.OfficeId
         };
@@ -779,6 +782,7 @@ static void PopulateDbOption(AssetTracker2Context context)
 
         Asset AsusZenbookProDuoAsset = new Asset()
         {
+            Type = "Laptop",
             LaptopId = AsusZenbookProDuo.Id,
             OfficeId = AsusZenbookProDuo.OfficeId
         };
