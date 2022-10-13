@@ -503,6 +503,12 @@ void Main()
                 context.MobilePhones.Add(mobilePhone);
 
                 // Create asset from mobile phone
+                Asset asset = new Asset()
+                {
+                    MobilePhoneId = mobilePhone.Id,
+                    OfficeId = mobilePhone.OfficeId
+                };
+                context.Assets.Add(asset);
             }
 
             // Create new laptop
@@ -519,6 +525,12 @@ void Main()
                 context.Laptops.Add(laptop);
 
                 // Create asset from laptop
+                Asset asset = new Asset()
+                {
+                    LaptopId = laptop.Id,
+                    OfficeId = laptop.OfficeId
+                };
+                context.Assets.Add(asset);
             }
         }
 
@@ -583,7 +595,7 @@ static void PopulateDbOption(AssetTracker2Context context)
     string input = Console.ReadLine();
     if(input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
     {
-        // Adding Mobilephones        
+        // Adding Mobilephones and assets        
         MobilePhone SamsungGalaxyS20 = new MobilePhone()
         {
             Brand = "Samsung",
@@ -593,6 +605,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2020-03-30")
         };
         context.MobilePhones.Add(SamsungGalaxyS20);
+
+        Asset SamsungGalaxyS20Asset = new Asset()
+        {
+            MobilePhoneId = SamsungGalaxyS20.Id,
+            OfficeId = SamsungGalaxyS20.OfficeId
+        };
+        context.Assets.Add(SamsungGalaxyS20Asset);
+
         MobilePhone iPhone12 = new MobilePhone()
         {
             Brand = "iPhone",
@@ -602,6 +622,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2022-05-12")
         };
         context.MobilePhones.Add(iPhone12);
+
+        Asset iPhone12Asset = new Asset()
+        {
+            MobilePhoneId = iPhone12.Id,
+            OfficeId = iPhone12.OfficeId
+        };
+        context.Assets.Add(iPhone12Asset);
+
         MobilePhone GooglePixel6a = new MobilePhone()
         {
             Brand = "Google",
@@ -611,6 +639,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2021-12-28")
         };
         context.MobilePhones.Add(GooglePixel6a);
+
+        Asset GooglePixel6aAsset = new Asset()
+        {
+            MobilePhoneId = GooglePixel6a.Id,
+            OfficeId = GooglePixel6a.OfficeId
+        };
+        context.Assets.Add(GooglePixel6aAsset);
+
         MobilePhone NokiaG21 = new MobilePhone()
         {
             Brand = "Nokia",
@@ -620,6 +656,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2020-10-04")
         };
         context.MobilePhones.Add(NokiaG21);
+
+        Asset NokiaG21Asset = new Asset()
+        {
+            MobilePhoneId = NokiaG21.Id,
+            OfficeId = NokiaG21.OfficeId
+        };
+        context.Assets.Add(NokiaG21Asset);
+
         MobilePhone iPhone8 = new MobilePhone()
         {
             Brand = "iPhone",
@@ -629,6 +673,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2018-01-09")
         };
         context.MobilePhones.Add(iPhone8);
+
+        Asset iPhone8Asset = new Asset()
+        {
+            MobilePhoneId = iPhone8.Id,
+            OfficeId = iPhone8.OfficeId
+        };
+        context.Assets.Add(iPhone8Asset);
+
         MobilePhone MotoroloMotoG60s = new MobilePhone()
         {
             Brand = "Motorola",
@@ -638,6 +690,13 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2020-06-19")
         };
         context.MobilePhones.Add(MotoroloMotoG60s);
+
+        Asset MotoroloMotoG60sAsset = new Asset()
+        {
+            MobilePhoneId = MotoroloMotoG60s.Id,
+            OfficeId = MotoroloMotoG60s.OfficeId
+        };
+        context.Assets.Add(MotoroloMotoG60sAsset);
 
         // Adding Laptops
         Laptop Lenovo700 = new Laptop()
@@ -649,6 +708,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2019-03-19")
         };
         context.Laptops.Add(Lenovo700);
+
+        Asset Lenovo700Asset = new Asset()
+        {
+            LaptopId = Lenovo700.Id,
+            OfficeId = Lenovo700.OfficeId
+        };
+        context.Assets.Add(Lenovo700Asset);
+
         Laptop MacBookAir = new Laptop()
         {
             Brand = "MacBook",
@@ -658,6 +725,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2022-04-11")
         };
         context.Laptops.Add(MacBookAir);
+
+        Asset MacBookAirAsset = new Asset()
+        {
+            LaptopId = MacBookAir.Id,
+            OfficeId = MacBookAir.OfficeId
+        };
+        context.Assets.Add(MacBookAirAsset);
+        
         Laptop HPPavilion15 = new Laptop()
         {
             Brand = "HP",
@@ -667,6 +742,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2020-01-17")
         };
         context.Laptops.Add(HPPavilion15);
+
+        Asset HPPavilion15Asset = new Asset()
+        {
+            LaptopId = HPPavilion15.Id,
+            OfficeId = HPPavilion15.OfficeId
+        };
+        context.Assets.Add(HPPavilion15Asset);
+        
         Laptop AcerAspire2 = new Laptop()
         {
             Brand = "Acer",
@@ -676,6 +759,14 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2020-04-02")
         };
         context.Laptops.Add(AcerAspire2);
+
+        Asset AcerAspire2Asset = new Asset()
+        {
+            LaptopId = AcerAspire2.Id,
+            OfficeId = AcerAspire2.OfficeId
+        };
+        context.Assets.Add(AcerAspire2Asset);
+
         Laptop AsusZenbookProDuo = new Laptop()
         {
             Brand = "Asus",
@@ -685,6 +776,13 @@ static void PopulateDbOption(AssetTracker2Context context)
             PurchaseDate = Convert.ToDateTime("2022-07-05")
         };
         context.Laptops.Add(AsusZenbookProDuo);
+
+        Asset AsusZenbookProDuoAsset = new Asset()
+        {
+            LaptopId = AsusZenbookProDuo.Id,
+            OfficeId = AsusZenbookProDuo.OfficeId
+        };
+        context.Assets.Add(AsusZenbookProDuoAsset);
     }
 
     // Do nothing/exit method if user types 'n' or 'no'
