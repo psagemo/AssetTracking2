@@ -85,11 +85,15 @@ void Main()
         string model = "";
         string office = "";
         DateTime purchaseDate = new();
-        int USD = 0;
+        int price = 0;
+        int priceInUSD = 0;
         string currency = "";
-        double localPriceToday = 0;
-        double EUR = 0.99;
-        double SEK = 10.46;
+        double USDtoEUR = (priceInUSD * 1.03);
+        double USDtoSEK = (priceInUSD * 11.34);
+        //double EURtoUSD = (price * 0.97);
+        //double EURtoSEK = (price * 11.02);
+        //double SEKtoUSD = (price * 0.09);
+        //double SEKtoEUR = (price * 0.09);
 
 
         // Check if type is set
@@ -439,13 +443,46 @@ void Main()
             }
 
         }
-        // Check if price is set
 
-        /*------------------------------------------------------------------------*
-         *------------------------------------------------------------------------*
-         *----------------------------------TODO----------------------------------*
-         *------------------------------------------------------------------------*
-         *------------------------------------------------------------------------*/
+        // Check if price is set
+        if (price == 0 && type != "" && brand != "" && model != "" && office != "")
+        {
+            Console.WriteLine("Enter the assets purchase price in USD");
+            Exit(); // Method to print exit instructions
+
+            string input = Console.ReadLine();
+
+            // Exit functionallity
+            if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
+            {
+                break;
+            }
+
+            // Set price based on local currency or print error
+            else if (int.TryParse(input.Trim(), out priceInUSD)) 
+            {
+                if (office == "USA")
+                {
+                    price = priceInUSD;
+                }
+                else if (office == "Spain")
+                {
+                    price = (int)USDtoEUR;
+                }
+                else if (office == "Sweden")
+                {
+                    price = (int)USDtoSEK;
+                }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Wrong input, price must be written with numbers");
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+        }
+
 
 
         // Create asset if all values are set
@@ -454,7 +491,29 @@ void Main()
          *------------------------------------------------------------------------*
          *----------------------------------TODO----------------------------------*
          *------------------------------------------------------------------------*
-         *------------------------------------------------------------------------*/
+         *------------------------------------------------------------------------*
+         MobilePhone MotoroloMotoG60s = new MobilePhone()
+        {
+            Brand = "Motorola",
+            Model = "Moto G60s",
+            Price = 2499,
+            OfficeId = 3,
+            PurchaseDate = Convert.ToDateTime("2020-06-19")
+        };
+        context.MobilePhones.Add(MotoroloMotoG60s);
+        
+        Laptop Lenovo700 = new Laptop()
+        {
+            Brand = "Lenovo",
+            Model = "700",
+            Price = 599,
+            OfficeId = 2,
+            PurchaseDate = Convert.ToDateTime("2019-03-19")
+        };
+        context.Laptops.Add(Lenovo700);
+        
+         
+         */
     }
     // Print assets
     //var assets = from asset in context.Assets
@@ -506,6 +565,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2020-03-30")
         };
+        context.MobilePhones.Add(SamsungGalaxyS20);
         MobilePhone iPhone12 = new MobilePhone()
         {
             Brand = "iPhone",
@@ -514,6 +574,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 1,
             PurchaseDate = Convert.ToDateTime("2022-05-12")
         };
+        context.MobilePhones.Add(iPhone12);
         MobilePhone GooglePixel6a = new MobilePhone()
         {
             Brand = "Google",
@@ -522,6 +583,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2021-12-28")
         };
+        context.MobilePhones.Add(GooglePixel6a);
         MobilePhone NokiaG21 = new MobilePhone()
         {
             Brand = "Nokia",
@@ -530,6 +592,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 1,
             PurchaseDate = Convert.ToDateTime("2020-10-04")
         };
+        context.MobilePhones.Add(NokiaG21);
         MobilePhone iPhone8 = new MobilePhone()
         {
             Brand = "iPhone",
@@ -538,6 +601,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2018-01-09")
         };
+        context.MobilePhones.Add(iPhone8);
         MobilePhone MotoroloMotoG60s = new MobilePhone()
         {
             Brand = "Motorola",
@@ -546,7 +610,8 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2020-06-19")
         };
-        
+        context.MobilePhones.Add(MotoroloMotoG60s);
+
         // Adding Laptops
         Laptop Lenovo700 = new Laptop()
         {
@@ -556,6 +621,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2019-03-19")
         };
+        context.Laptops.Add(Lenovo700);
         Laptop MacBookAir = new Laptop()
         {
             Brand = "MacBook",
@@ -564,6 +630,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 1,
             PurchaseDate = Convert.ToDateTime("2022-04-11")
         };
+        context.Laptops.Add(MacBookAir);
         Laptop HPPavilion15 = new Laptop()
         {
             Brand = "HP",
@@ -572,6 +639,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2020-01-17")
         };
+        context.Laptops.Add(HPPavilion15);
         Laptop AcerAspire2 = new Laptop()
         {
             Brand = "Acer",
@@ -580,6 +648,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2020-04-02")
         };
+        context.Laptops.Add(AcerAspire2);
         Laptop AsusZenbookProDuo = new Laptop()
         {
             Brand = "Asus",
@@ -588,6 +657,7 @@ static void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2022-07-05")
         };
+        context.Laptops.Add(AsusZenbookProDuo);
     }
 
     // Do nothing/exit method if user types 'n' or 'no'
