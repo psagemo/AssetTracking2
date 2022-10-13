@@ -457,7 +457,7 @@ void Main()
          *------------------------------------------------------------------------*/
     }
     // Print assets
-    //var assets = from 
+    //var assets = from asset in context.Assets
 
 
 }

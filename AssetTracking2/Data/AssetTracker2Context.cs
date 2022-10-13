@@ -13,6 +13,7 @@ namespace AssetTracking2.Data
         public DbSet<Office> Offices { get; set; } = null!;
         public DbSet<MobilePhone> MobilePhones { get; set; } = null!;
         public DbSet<Laptop> Laptops { get; set; } = null!;
+        public DbSet<Asset> Assets { get; set; } = null!;
         
         string connectionString = "data source=LAPTOP-0OPDGJ0V;initial catalog=assets;trusted_connection=true";
 
