@@ -8,7 +8,7 @@ namespace AssetTracking2.Models
 {
     internal class Laptop
     {
-        public int Id { get; set; }
+        public int LaptopId { get; set; }
         public int Price { get; set; }
         public DateTime PurchaseDate { get; set; }
         public string Brand { get; set; } = null!;

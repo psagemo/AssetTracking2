@@ -64,6 +64,7 @@ Console.WriteLine();
 // Initializing context
 using AssetTracker2Context context = new AssetTracker2Context();
 
+
 // Option to populate db with generated assets
 PopulateDbOption(context);
 
@@ -71,9 +72,7 @@ PopulateDbOption(context);
 AddOffices(context);
 
 // Saving context
-context.SaveChanges();
-
-
+//context.SaveChanges();
 
 // Launching program
 Main();
@@ -81,12 +80,13 @@ Main();
 void Main()
 {
     Console.WriteLine("Select and option by typing the corresponding number:");
-    Exit();
+    Console.WriteLine("Enter 'E' or 'EXIT' in order to close the program.");
     Console.WriteLine("1. Create Asset");
     Console.WriteLine("2. Edit or Delete existing Asset");
     Console.WriteLine("3. Print Assets");
 
     string input = Console.ReadLine();
+    Console.WriteLine();
 
     switch (input.Trim().ToLower())
     {
@@ -105,70 +105,95 @@ void Main()
         case "3":
             PrintAssets();
             break;
-
     }   
 }
 
 // Method to add Offices
 static void AddOffices(AssetTracker2Context context)
-{
+{  
     // Get offices from database using context
-    var offices = from office in context.Offices
-                 where office != null                 
-                 select office;       
-    
-    // Create each office and add to db if it does not already exist
-    Office USA = new Office()
+    var offices = context.Offices
+        .Where(o => o != null);
+
+    var officeCount = context.Offices.Count();
+
+    //Console.WriteLine("OfficeCount: " + officeCount);
+
+    // Add offices if they don't already exist
+    if (officeCount == 0)
     {
-        Location = "USA",
-        Currency = "USD"
-    };
-    if (!offices.Contains(USA))
-    {
+        Office USA = new Office()
+        {
+            Location = "USA",
+            Currency = "USD"
+        };
         context.Offices.Add(USA);
-    }    
-    Office Spain = new Office()
-    {
-        Location = "Spain",
-        Currency = "EUR"
-    };
-    if (!offices.Contains(Spain))
-    {
+        Office Spain = new Office()
+        {
+            Location = "Spain",
+            Currency = "EUR"
+        };
         context.Offices.Add(Spain);
-    }
-    Office Sweden = new Office()
-    {
-        Location = "Sweden",
-        Currency = "SEK"
-    };
-    if (!offices.Contains(Sweden))
-    {
+        
+        Office Sweden = new Office()
+        {
+            Location = "Sweden",
+            Currency = "SEK"
+        };
         context.Offices.Add(Sweden);
-    }
+
+        // Save context or print error
+        try
+        {
+            // Saving context
+            context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Something went wrong:");
+            Console.WriteLine(e.ToString());
+            Console.ResetColor();
+        }
+    }   
 }
 
 // Method to add pre-generated assets
 void PopulateDbOption(AssetTracker2Context context)
 {
-    // Get assets, mobile phones and laptops from database
-    var assets = from asset in context.Assets
-                 where asset != null
-                 select asset;
-    var mobilePhones = from mobilePhone in context.MobilePhones
-                 where mobilePhone != null                 
-                 select mobilePhone;
-    var laptops = from laptop in context.Laptops
-                       where laptop != null
-                       select laptop;
+    
 
+
+    // Get assets, mobile phones and laptops from database
+    var assets = context.Assets
+        .Where(a => a != null)
+        .OrderBy(a => a.Type);
+
+    var mobilePhones = context.MobilePhones
+        .Where(m => m != null);
+
+    var laptops = context.Laptops
+        .Where(l => l != null);
+
+    
+
+    var assetCount = context.Assets.Count();
+
+    //Console.WriteLine("OfficeCount: " + officeCount);
+
+    // Add offices if they don't already exist
+    if (assetCount == 0)
+    {
+
+    }
     // Prompt user to add pre-generated assets to database
     Console.WriteLine("Would you like to populate the database with pre-generated assets? [Y/N]");
     string input = Console.ReadLine();
+    Console.WriteLine();
 
-    // 
-    if(input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
-    {
-        // Adding Mobilephones and assets if they don't already exist        
+    // Adding Mobilephones and assets if they don't already exist
+    if (input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
+    {                
         MobilePhone SamsungGalaxyS20 = new MobilePhone()
         {
             Brand = "Samsung",
@@ -177,21 +202,25 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2020-03-30")
         };
-        if (!mobilePhones.Contains(SamsungGalaxyS20))
+        if (mobilePhones.Any(m => m.Model == SamsungGalaxyS20.Model && m.PurchaseDate == SamsungGalaxyS20.PurchaseDate)) { }
+        else
         {
             context.MobilePhones.Add(SamsungGalaxyS20);
-        }
+            context.SaveChanges();
 
-        Asset SamsungGalaxyS20Asset = new Asset()
-        {
-            Type = "MobilePhone",
-            MobilePhoneId = SamsungGalaxyS20.Id,
-            OfficeId = SamsungGalaxyS20.OfficeId
-        };
-        if (!assets.Contains(SamsungGalaxyS20Asset))
-        {
-            context.Assets.Add(SamsungGalaxyS20Asset);
-        }
+            // Creating asset from mobile phone
+            Asset SamsungGalaxyS20Asset = new Asset()
+            {
+                Type = "MobilePhone",
+                MobilePhoneId = SamsungGalaxyS20.MobilePhoneId,
+                OfficeId = SamsungGalaxyS20.OfficeId
+            };
+            if (assets.Any(a => a.MobilePhoneId == SamsungGalaxyS20.MobilePhoneId)) { }
+            else
+            {
+                context.Assets.Add(SamsungGalaxyS20Asset);
+            }
+        }       
 
         MobilePhone iPhone12 = new MobilePhone()
         {
@@ -201,21 +230,25 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 1,
             PurchaseDate = Convert.ToDateTime("2022-05-12")
         };
-        if (!mobilePhones.Contains(iPhone12))
+        if (mobilePhones.Any(m => m.Model == iPhone12.Model && m.PurchaseDate == iPhone12.PurchaseDate)) { }
+        else
         {
             context.MobilePhones.Add(iPhone12);
-        }
+            context.SaveChanges();
 
-        Asset iPhone12Asset = new Asset()
-        {
-            Type = "MobilePhone",
-            MobilePhoneId = iPhone12.Id,
-            OfficeId = iPhone12.OfficeId
-        };
-        if (!assets.Contains(iPhone12Asset))
-        {
-            context.Assets.Add(iPhone12Asset);
-        }
+
+            Asset iPhone12Asset = new Asset()
+            {
+                Type = "MobilePhone",
+                MobilePhoneId = iPhone12.MobilePhoneId,
+                OfficeId = iPhone12.OfficeId
+            };
+            if (assets.Any(a => a.MobilePhoneId == iPhone12.MobilePhoneId)) { }
+            else
+            {
+                context.Assets.Add(iPhone12Asset);
+            }
+        }        
 
         MobilePhone GooglePixel6a = new MobilePhone()
         {
@@ -225,20 +258,24 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2021-12-28")
         };
-        if (!mobilePhones.Contains(GooglePixel6a))
+        if (mobilePhones.Any(m => m.Model == GooglePixel6a.Model && m.PurchaseDate == GooglePixel6a.PurchaseDate)) { }
+        else
         {
             context.MobilePhones.Add(GooglePixel6a);
-        }
+            context.SaveChanges();
 
-        Asset GooglePixel6aAsset = new Asset()
-        {
-            Type = "MobilePhone",
-            MobilePhoneId = GooglePixel6a.Id,
-            OfficeId = GooglePixel6a.OfficeId
-        };
-        if (!assets.Contains(GooglePixel6aAsset))
-        {
-            context.Assets.Add(GooglePixel6aAsset);
+
+            Asset GooglePixel6aAsset = new Asset()
+            {
+                Type = "MobilePhone",
+                MobilePhoneId = GooglePixel6a.MobilePhoneId,
+                OfficeId = GooglePixel6a.OfficeId
+            };
+            if (assets.Any(a => a.MobilePhoneId == GooglePixel6a.MobilePhoneId)) { }
+            else
+            {
+                context.Assets.Add(GooglePixel6aAsset);
+            }
         }
 
         MobilePhone NokiaG21 = new MobilePhone()
@@ -249,20 +286,24 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 1,
             PurchaseDate = Convert.ToDateTime("2020-10-04")
         };
-        if (!mobilePhones.Contains(NokiaG21))
+        if (mobilePhones.Any(m => m.Model == NokiaG21.Model && m.PurchaseDate == NokiaG21.PurchaseDate)) { }
+        else
         {
             context.MobilePhones.Add(NokiaG21);
-        }
+            context.SaveChanges();
 
-        Asset NokiaG21Asset = new Asset()
-        {
-            Type = "MobilePhone",
-            MobilePhoneId = NokiaG21.Id,
-            OfficeId = NokiaG21.OfficeId
-        };
-        if (!assets.Contains(NokiaG21Asset))
-        {
-            context.Assets.Add(NokiaG21Asset);
+
+            Asset NokiaG21Asset = new Asset()
+            {
+                Type = "MobilePhone",
+                MobilePhoneId = NokiaG21.MobilePhoneId,
+                OfficeId = NokiaG21.OfficeId
+            };
+            if (assets.Any(a => a.MobilePhoneId == NokiaG21.MobilePhoneId)) { }
+            else
+            {
+                context.Assets.Add(NokiaG21Asset);
+            }
         }
 
         MobilePhone iPhone8 = new MobilePhone()
@@ -273,20 +314,24 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2018-01-09")
         };
-        if (!mobilePhones.Contains(iPhone8))
+        if (mobilePhones.Any(m => m.Model == iPhone8.Model && m.PurchaseDate == iPhone8.PurchaseDate)) { }
+        else
         {
             context.MobilePhones.Add(iPhone8);
-        }
+            context.SaveChanges();
 
-        Asset iPhone8Asset = new Asset()
-        {
-            Type = "MobilePhone",
-            MobilePhoneId = iPhone8.Id,
-            OfficeId = iPhone8.OfficeId
-        };
-        if (!assets.Contains(iPhone8Asset))
-        {
-            context.Assets.Add(iPhone8Asset);
+
+            Asset iPhone8Asset = new Asset()
+            {
+                Type = "MobilePhone",
+                MobilePhoneId = iPhone8.MobilePhoneId,
+                OfficeId = iPhone8.OfficeId
+            };
+            if (assets.Any(a => a.MobilePhoneId == iPhone8.MobilePhoneId)) { }
+            else
+            {
+                context.Assets.Add(iPhone8Asset);
+            }
         }
 
         MobilePhone MotoroloMotoG60s = new MobilePhone()
@@ -297,20 +342,24 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2020-06-19")
         };
-        if (!mobilePhones.Contains(MotoroloMotoG60s))
+        if (mobilePhones.Any(m => m.Model == MotoroloMotoG60s.Model && m.PurchaseDate == MotoroloMotoG60s.PurchaseDate)) { }
+        else
         {
             context.MobilePhones.Add(MotoroloMotoG60s);
-        }
+            context.SaveChanges();
 
-        Asset MotoroloMotoG60sAsset = new Asset()
-        {
-            Type = "MobilePhone",
-            MobilePhoneId = MotoroloMotoG60s.Id,
-            OfficeId = MotoroloMotoG60s.OfficeId
-        };
-        if (!assets.Contains(MotoroloMotoG60sAsset))
-        {
-            context.Assets.Add(MotoroloMotoG60sAsset);
+
+            Asset MotoroloMotoG60sAsset = new Asset()
+            {
+                Type = "MobilePhone",
+                MobilePhoneId = MotoroloMotoG60s.MobilePhoneId,
+                OfficeId = MotoroloMotoG60s.OfficeId
+            };
+            if (assets.Any(a => a.MobilePhoneId == MotoroloMotoG60s.MobilePhoneId)) { }
+            else
+            {
+                context.Assets.Add(MotoroloMotoG60sAsset);
+            }
         }
 
         // Adding Laptops and assets if they don't already exist  
@@ -321,21 +370,26 @@ void PopulateDbOption(AssetTracker2Context context)
             Price = 599,
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2019-03-19")
-        };
-        if (!laptops.Contains(Lenovo700))
+        }; 
+        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        else
         {
             context.Laptops.Add(Lenovo700);
-        }
+            context.SaveChanges();
 
-        Asset Lenovo700Asset = new Asset()
-        {
-            Type = "Laptop",
-            LaptopId = Lenovo700.Id,
-            OfficeId = Lenovo700.OfficeId
-        };
-        if (!assets.Contains(Lenovo700Asset))
-        {
-            context.Assets.Add(Lenovo700Asset);
+
+            Asset Lenovo700Asset = new Asset()
+            {
+                Type = "Laptop",
+                LaptopId = Lenovo700.LaptopId,
+                OfficeId = Lenovo700.OfficeId
+            };
+            if (assets.Any(a => a.LaptopId == Lenovo700.LaptopId)) { }
+            else
+            {
+                context.Assets.Add(Lenovo700Asset);
+                context.SaveChanges();
+            }
         }
 
         Laptop MacBookAir = new Laptop()
@@ -346,20 +400,25 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 1,
             PurchaseDate = Convert.ToDateTime("2022-04-11")
         };
-        if (!laptops.Contains(MacBookAir))
+        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        else
         {
-            context.Laptops.Add(MacBookAir);
-        }
+            context.Laptops.Add(Lenovo700);
+            context.SaveChanges();
 
-        Asset MacBookAirAsset = new Asset()
-        {
-            Type = "Laptop",
-            LaptopId = MacBookAir.Id,
-            OfficeId = MacBookAir.OfficeId
-        };
-        if (!assets.Contains(MacBookAirAsset))
-        {
-            context.Assets.Add(MacBookAirAsset);
+
+            Asset MacBookAirAsset = new Asset()
+            {
+                Type = "Laptop",
+                LaptopId = MacBookAir.LaptopId,
+                OfficeId = MacBookAir.OfficeId
+            };
+            if (assets.Any(a => a.LaptopId == MacBookAir.LaptopId)) { }
+            else
+            {
+                context.Assets.Add(MacBookAirAsset);
+                context.SaveChanges();
+            }
         }
 
         Laptop HPPavilion15 = new Laptop()
@@ -370,20 +429,25 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2020-01-17")
         };
-        if (!laptops.Contains(HPPavilion15))
+        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        else
         {
-            context.Laptops.Add(HPPavilion15);
-        }
+            context.Laptops.Add(Lenovo700);
+            context.SaveChanges();
 
-        Asset HPPavilion15Asset = new Asset()
-        {
-            Type = "Laptop",
-            LaptopId = HPPavilion15.Id,
-            OfficeId = HPPavilion15.OfficeId
-        };
-        if (!assets.Contains(HPPavilion15Asset))
-        {
-            context.Assets.Add(HPPavilion15Asset);
+
+            Asset HPPavilion15Asset = new Asset()
+            {
+                Type = "Laptop",
+                LaptopId = HPPavilion15.LaptopId,
+                OfficeId = HPPavilion15.OfficeId
+            };
+            if (assets.Any(a => a.LaptopId == HPPavilion15.LaptopId)) { }
+            else
+            {
+                context.Assets.Add(HPPavilion15Asset);
+                context.SaveChanges();
+            }
         }
 
         Laptop AcerAspire2 = new Laptop()
@@ -394,20 +458,25 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2020-04-02")
         };
-        if (!laptops.Contains(AcerAspire2))
+        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        else
         {
-            context.Laptops.Add(AcerAspire2);
-        }
+            context.Laptops.Add(Lenovo700);
+            context.SaveChanges();
 
-        Asset AcerAspire2Asset = new Asset()
-        {
-            Type = "Laptop",
-            LaptopId = AcerAspire2.Id,
-            OfficeId = AcerAspire2.OfficeId
-        };
-        if (!assets.Contains(AcerAspire2Asset))
-        {
-            context.Assets.Add(AcerAspire2Asset);
+
+            Asset AcerAspire2Asset = new Asset()
+            {
+                Type = "Laptop",
+                LaptopId = AcerAspire2.LaptopId,
+                OfficeId = AcerAspire2.OfficeId
+            };
+            if (assets.Any(a => a.LaptopId == AcerAspire2.LaptopId)) { }
+            else
+            {
+                context.Assets.Add(AcerAspire2Asset);
+                context.SaveChanges();
+            }
         }
 
         Laptop AsusZenbookProDuo = new Laptop()
@@ -418,24 +487,42 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2022-07-05")
         };
-        if (!laptops.Contains(AsusZenbookProDuo))
+        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        else
         {
-            context.Laptops.Add(AsusZenbookProDuo);
+            context.Laptops.Add(Lenovo700);
+            context.SaveChanges();
+
+
+            Asset AsusZenbookProDuoAsset = new Asset()
+            {
+                Type = "Laptop",
+                LaptopId = AsusZenbookProDuo.LaptopId,
+                OfficeId = AsusZenbookProDuo.OfficeId
+            };
+            if (assets.Any(a => a.LaptopId == AsusZenbookProDuo.LaptopId)) { }
+            else
+            {
+                context.Assets.Add(AsusZenbookProDuoAsset);
+                context.SaveChanges();
+            }
         }
 
-        Asset AsusZenbookProDuoAsset = new Asset()
-        {
-            Type = "Laptop",
-            LaptopId = AsusZenbookProDuo.Id,
-            OfficeId = AsusZenbookProDuo.OfficeId
-        };
-        if (!assets.Contains(AsusZenbookProDuoAsset))
-        {
-            context.Assets.Add(AsusZenbookProDuoAsset);
-        }
+        // Saving context
+        //try
+        //{            
+        //    context.SaveChanges();
+        //}
+        //catch (Exception e)
+        //{
+        //    Console.ForegroundColor = ConsoleColor.Red;
+        //    Console.WriteLine("Something went wrong:");
+        //    Console.WriteLine(e.ToString());
+        //    Console.ResetColor();
+        //}
     }
 
-    
+
     // Do nothing/exit method if user types 'n' or 'no'
     else if(input.Trim().ToLower() == "n" || input.Trim().ToLower() == "no") 
     {
@@ -447,6 +534,7 @@ void PopulateDbOption(AssetTracker2Context context)
     else
     {
         Console.WriteLine("Wrong input, answer must 'Y' , 'Yes' , 'N' or 'No'. ");
+        Console.WriteLine();
         PopulateDbOption(context);
     }
 }
@@ -454,35 +542,44 @@ void PopulateDbOption(AssetTracker2Context context)
 // Method to check for existing assets
 void CheckForAssets()
 {
-    var assets = from asset in context.Assets
-                 where asset != null
-                 select asset;
-    var mobilePhones = from mobilePhone in context.MobilePhones
-                       where mobilePhone != null
-                       select mobilePhone;
-    var laptops = from laptop in context.Laptops
-                  where laptop != null
-                  select laptop;
+    var assets = context.Assets
+        .Where(a => a != null)
+        .OrderBy(a => a.Type);
+
+    var mobilePhones = context.MobilePhones
+        .Where(m => m != null);
+
+    var laptops = context.Laptops
+        .Where(l => l != null);
 
     // Check if database contains assets
-    if (assets != null)
+    if (assets.Count() != 0)
     {
         // Prompt user to keep or delete existing assets
-        Console.WriteLine("Assets were found in database");
+        Console.WriteLine(assets.Count() + " assets were found in database");
         Console.WriteLine("If you would like to KEEP existing assets, type 'Y' or 'Yes'");
         Console.WriteLine("If you would like to DELETE existing assets, type 'Delete'");
         string input = Console.ReadLine();
+        Console.WriteLine();
 
         // Do nothing/exit method if user types 'Y' or 'Yes'
         if (input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes") { }
+
+        // Delete existing assets from database if user types delete
         else if (input.Trim().ToLower() == "delete")
-        {
-            // Delete existing assets from database
-            /*------------------------------------------------------------------------*
-             *------------------------------------------------------------------------*
-             *----------------------------------TODO----------------------------------*
-             *------------------------------------------------------------------------*
-             *------------------------------------------------------------------------*/
+        {            
+            foreach (Asset a in assets)
+            {
+                context.Remove(a);
+            }
+            foreach (MobilePhone m in mobilePhones)
+            {
+                context.Remove(m);
+            }
+            foreach (Laptop l in laptops)
+            {
+                context.Remove(l);
+            }
         }
 
         // Print error + re-launch CheckForAssets on wrong input
@@ -552,12 +649,14 @@ void CreateAsset(Asset? edit = null)
                 Console.WriteLine("6. The asset's Price");
 
                 string input = Console.ReadLine();
+                Console.WriteLine();
 
                 // Reset values to edit and set previous values 
                 switch (input.Trim().ToLower())
                 {
                     case "e":
                     case "exit":
+                        Main();
                         break;
 
                     case "1":
@@ -612,6 +711,7 @@ void CreateAsset(Asset? edit = null)
             Exit(); // Method to print exit instructions
 
             string input = Console.ReadLine();
+            Console.WriteLine();
 
             // Exit functionallity
             if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
@@ -663,6 +763,7 @@ void CreateAsset(Asset? edit = null)
                 Exit(); // Method to print exit instructions
 
                 string input = Console.ReadLine();
+                Console.WriteLine();
 
                 switch (input.ToLower().Trim())
                 {
@@ -689,6 +790,7 @@ void CreateAsset(Asset? edit = null)
                     default:
                         Console.WriteLine("Please enter the name of the brand:");
                         input = Console.ReadLine();
+                        Console.WriteLine();
 
                         // Error handling
                         if (input.Trim() == "")
@@ -730,6 +832,7 @@ void CreateAsset(Asset? edit = null)
 
                 Exit(); // Method to print exit instructions
                 string input = Console.ReadLine();
+                Console.WriteLine();
 
                 // Set brand from options or manually
                 switch (input.ToLower().Trim())
@@ -758,6 +861,7 @@ void CreateAsset(Asset? edit = null)
                     default:
                         Console.WriteLine("Please enter the name of the brand:");
                         input = Console.ReadLine();
+                        Console.WriteLine();
 
                         // Error handling
                         if (input.Trim() == "")
@@ -795,6 +899,7 @@ void CreateAsset(Asset? edit = null)
             Exit(); // Method to print exit instructions
 
             string input = Console.ReadLine();
+            Console.WriteLine();
 
             // Exit functionallity
             if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
@@ -847,6 +952,7 @@ void CreateAsset(Asset? edit = null)
 
             Exit(); // Method to print exit instructions
             string input = Console.ReadLine();
+            Console.WriteLine();
 
             // Set office and currency from user input
             switch (input.ToLower().Trim())
@@ -899,6 +1005,7 @@ void CreateAsset(Asset? edit = null)
                 Console.WriteLine("Enter the year the asset was purchased:"); ;
                 Exit(); // Method to print exit instructions
                 string input = Console.ReadLine();
+                Console.WriteLine();
 
                 // Exit functionallity
                 if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
@@ -932,6 +1039,7 @@ void CreateAsset(Asset? edit = null)
                 Exit(); // Method to print exit instructions
 
                 string input = Console.ReadLine();
+                Console.WriteLine();
 
                 // Exit functionallity
                 if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
@@ -964,6 +1072,7 @@ void CreateAsset(Asset? edit = null)
                 Console.WriteLine("Enter the day the asset was purchased:");
                 Exit(); // Method to print exit instructions
                 string input = Console.ReadLine();
+                Console.WriteLine();
 
                 // Exit functionallity
                 if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
@@ -1022,6 +1131,7 @@ void CreateAsset(Asset? edit = null)
             Exit(); // Method to print exit instructions
 
             string input = Console.ReadLine();
+            Console.WriteLine();
 
             // Exit functionallity
             if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
@@ -1098,7 +1208,7 @@ void CreateAsset(Asset? edit = null)
                     Asset asset = new Asset()
                     {
                         Type = "MobilePhone",
-                        MobilePhoneId = mobilePhone.Id,
+                        MobilePhoneId = mobilePhone.MobilePhoneId,
                         OfficeId = mobilePhone.OfficeId
                     };
                     context.Assets.Add(asset);
@@ -1121,7 +1231,7 @@ void CreateAsset(Asset? edit = null)
                     Asset asset = new Asset()
                     {
                         Type = "Laptop",
-                        LaptopId = laptop.Id,
+                        LaptopId = laptop.LaptopId,
                         OfficeId = laptop.OfficeId
                     };
                     context.Assets.Add(asset);
@@ -1140,38 +1250,60 @@ void EditAsset()
     Console.WriteLine("2. Delete existing asset");
 
     string input = Console.ReadLine();
+    Console.WriteLine();
 
+    string action = "";
+        
     // Edit functionality
     if (input.Trim().ToLower() == "1" || input.Trim().ToLower() == "edit")
     {
-        PrintAssets();
-        Console.WriteLine("Type the ID of the asset you would like to EDIT");
-        input = Console.ReadLine();
+        action = "EDIT";
+    }
 
-        int inputId;
-        //Asset editAsset;
+    // Delete functionality
+    else if (input.Trim().ToLower() == "2" || input.Trim().ToLower() == "delete")
+    {
+        action = "DELETE";
+    }
 
-        // Match input to asset id
-        if (int.TryParse(input.Trim(), out inputId))
+    // Exit to main menu if user types 'E' or 'Exit'
+    else if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
+    {
+        Main();
+    }
+
+    PrintAssets();
+    Console.WriteLine("Type the ID of the asset you would like to " + action);
+    input = Console.ReadLine();
+    Console.WriteLine();
+
+    int inputId;
+
+    // Match input to asset id
+    if (int.TryParse(input.Trim(), out inputId))
+    {
+        var editAsset = context.Assets
+            .Where(a => a.Id == inputId)
+            .FirstOrDefault();
+
+        // Check if selected asset exists, print asset and call CreateAsset to edit
+        if (editAsset is Asset)
         {
-            var editAsset = context.Assets
-                .Where(a => a.Id == inputId)
-                .FirstOrDefault();
-
-            // Check if selected asset exists, print asset and call CreateAsset to edit
-            if (editAsset is Asset)
-            {                
-                if (editAsset.Type == "MobilePhone")
-                {
-                    Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.MobilePhone.Brand.PadRight(20) + editAsset.MobilePhone.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.MobilePhone.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.MobilePhone.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));                    
-                }
-                else if (editAsset.Type == "Laptop")
-                {                    
-                    Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.Laptop.Brand.PadRight(20) + editAsset.Laptop.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.Laptop.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.Laptop.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));                    
-                }
-
-                Console.WriteLine("To edit the selected asset type 'Y' or 'Yes'");
-                Console.WriteLine("To go back and choose another asset to edit type 'N' or 'No'");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.DarkYellow;
+            if (editAsset.Type == "MobilePhone")
+            {
+                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.MobilePhone.Brand.PadRight(20) + editAsset.MobilePhone.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.MobilePhone.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.MobilePhone.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
+            }
+            else if (editAsset.Type == "Laptop")
+            {
+                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.Laptop.Brand.PadRight(20) + editAsset.Laptop.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.Laptop.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.Laptop.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
+            }
+            Console.ResetColor();
+            if (action == "EDIT")
+            {
+                Console.WriteLine("To EDIT the selected asset type 'Y' or 'Yes'");
+                Console.WriteLine("To go back and choose another asset to edit or delete type 'N' or 'No'");
                 Exit();
 
                 if (input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
@@ -1186,79 +1318,39 @@ void EditAsset()
                 {
                     Main();
                 }
-            }            
-
-            // Re-launch method on wrong input
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("No asset was found with the selected ID, try again");
-                Console.ResetColor();
-                Console.WriteLine();
-                EditAsset();
             }
-        }
-        // Re-launch method on wrong input
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Wrong input, id must be written with numbers");
-            Console.ResetColor();
-            Console.WriteLine();
-            EditAsset();
-        }
-    }
-
-    // Delete functionality
-    else if (input.Trim().ToLower() == "2" || input.Trim().ToLower() == "delete")
-    {
-        PrintAssets();
-        Console.WriteLine("Type the ID of the asset you would like to DELETE");
-        input = Console.ReadLine();
-
-        int inputId;
-        int deleteId = -1;
-
-        // Match input to asset id
-        if (int.TryParse(input.Trim(), out inputId))
-        {
-            foreach (var asset in context.Assets)
+            else if (action == "DELETE")
             {
-                if (asset.Id == inputId)
+                Console.WriteLine("To DELETE the selected asset type 'Y' or 'Yes'");
+                Console.WriteLine("To go back and choose another asset to edit or delete type 'N' or 'No'");
+                Exit();
+
+                if (input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
                 {
-                    deleteId = asset.Id;
+                    context.Remove(editAsset);
+                    context.SaveChanges();
                 }
-            }
-            if (deleteId >= 0)
-            {
-
-            }
-            // Re-launch method on wrong input
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("No asset was found with the selected ID, try again");
-                Console.ResetColor();
-                Console.WriteLine();
-                EditAsset();
-            }
+                else if (input.Trim().ToLower() == "n" || input.Trim().ToLower() == "no")
+                {
+                    EditAsset();
+                }
+                else if (input.Trim().ToLower() == "e" || input.Trim().ToLower() == "exit")
+                {
+                    Main();
+                }
+            }            
         }
+
         // Re-launch method on wrong input
         else
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Wrong input, id must be written with numbers");
+            Console.WriteLine("No asset was found with the selected ID, try again");
             Console.ResetColor();
             Console.WriteLine();
             EditAsset();
         }
-    }
-
-    // Exit to main menu if user types 'E' or 'Exit'
-    else if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
-    {
-        Main();
-    }
+    }    
 
     // Re-launch method on wrong input
     else
@@ -1275,82 +1367,133 @@ void EditAsset()
 void PrintAssets()
 {
     // Get assets from database
-    var assets = from asset in context.Assets
-                 where asset != null
-                 orderby asset.Type
-                 select asset;
-    
+    var assets = context.Assets.AsQueryable()
+        .Where (a => a != null)
+        .OrderBy(a => a.Type);
+
+    var mobilePhones = context.MobilePhones.AsQueryable()
+        .Where(m => m != null);
+
+    var laptops = context.Laptops.AsQueryable()
+        .Where(l => l != null);
+
+    var offices = context.Offices.AsQueryable()
+        .Where(l => l != null);
+
+    Console.WriteLine("Assets: " + assets); //Assets: Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[AssetTracking2.Models.Asset]
+
+
     // Print each asset
-    foreach (Asset asset in assets)
+    foreach (Asset a in assets)
     {
-        if(asset.Type == "MobilePhone")
+        
+        if (a.Type == "MobilePhone")
         {
             // Get data for mobile phone
-            int AssetId = asset.Id;
-            string Type = asset.Type;
-            string Brand = asset.MobilePhone.Brand;
-            string Model = asset.MobilePhone.Model;
-            string Office = asset.Office.Location;
-            DateTime PurchaseDate = asset.MobilePhone.PurchaseDate;
-            int Price = asset.MobilePhone.Price;
-            string Currency = asset.Office.Currency;            
+            int mobilePhoneId = (int)a.MobilePhoneId;
 
-            // Print product in red if purchase date is within 3 months from being 3 years old
-            if (asset.MobilePhone.PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+            List<MobilePhone> mobilePhoneList = mobilePhones.Where(m => m.MobilePhoneId == mobilePhoneId).ToList();
+
+            if (mobilePhoneList.Count == 1)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(AssetId.ToString().PadRight(10) +  Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency.PadRight(20));
-                Console.ResetColor();
-            }
+                MobilePhone mobilePhone = mobilePhoneList.First();
 
-            // Print product in yellow if purchase date is within 6 months from being 3 years old
-            else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(AssetId.ToString().PadRight(10) + Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency.PadRight(20));
-                Console.ResetColor();
-            }
+                string Type = a.Type;
+                string Brand = mobilePhone.Brand;
+                string Model = mobilePhone.Model;
+                DateTime PurchaseDate = mobilePhone.PurchaseDate;
+                int Price = mobilePhone.Price;
+                int OfficeId = mobilePhone.OfficeId;
+                List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
+                Office Office = officeList.First();
+                string Location = Office.Location;
+                string Currency = Office.Currency;
 
-            // Print product
+                // Print product in red if purchase date is within 3 months from being 3 years old
+                if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
+                    Console.ResetColor();
+                }
+
+                // Print product in yellow if purchase date is within 6 months from being 3 years old
+                else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
+                    Console.ResetColor();
+                }
+
+                // Print product
+                else
+                {
+                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);                    
+                }
+            }
             else
             {
-                Console.WriteLine(AssetId.ToString().PadRight(10) + Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency.PadRight(20));
+                Console.WriteLine("Something went wrong. Count = " + mobilePhoneList.Count());
             }
         }
-        else if (asset.Type == "Laptop")
+        else if (a.Type == "Laptop")
         {
-            // Get data for laptop
-            string Type = asset.Type;
-            string Brand = asset.Laptop.Brand;
-            string Model = asset.Laptop.Model;
-            string Office = asset.Office.Location;
-            DateTime PurchaseDate = asset.Laptop.PurchaseDate;
-            int Price = asset.Laptop.Price;
-            string Currency = asset.Office.Currency;
+            // Get data for mobile phone
+            int laptopId = (int)a.LaptopId;
 
-            // Print product in red if purchase date is within 3 months from being 3 years old
-            if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+            List<Laptop> laptopList = laptops.Where(m => m.LaptopId == laptopId).ToList();
+
+            if (laptopList.Count == 1)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency.PadRight(20));
-                Console.ResetColor();
-            }
+                Laptop laptop = laptopList.First();
 
-            // Print product in yellow if purchase date is within 6 months from being 3 years old
-            else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency.PadRight(20));
-                Console.ResetColor();
-            }
+                string Type = a.Type;
+                string Brand = laptop.Brand;
+                string Model = laptop.Model;
+                DateTime PurchaseDate = laptop.PurchaseDate;
+                int Price = laptop.Price;
+                int OfficeId = laptop.OfficeId;
+                List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
+                Office Office = officeList.First();
+                string Location = Office.Location;
+                string Currency = Office.Currency;
 
-            // Print product
+                // Print product in red if purchase date is within 3 months from being 3 years old
+                if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
+                    Console.ResetColor();
+                }
+
+                // Print product in yellow if purchase date is within 6 months from being 3 years old
+                else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
+                    Console.ResetColor();
+                }
+
+                // Print product
+                else
+                {
+                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);                    
+                }
+            }
             else
             {
-                Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Office.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency.PadRight(20));
+                Console.WriteLine("Something went wrong. Count = " + laptopList.Count());
             }
+        }
+        else
+        {
+            Console.WriteLine("No assets were found");
         }
     }
+    Console.WriteLine();
+    Console.WriteLine();
+    Console.WriteLine();
+
     // Go back to main menu
     Main();
 }
@@ -1359,6 +1502,6 @@ void PrintAssets()
 void Exit()
 {
     Console.ForegroundColor = ConsoleColor.DarkGray;
-    Console.WriteLine("Enter 'E' or 'EXIT' in order to close the program.");
+    Console.WriteLine("Enter 'E' or 'EXIT' in order to exit to main menu.");
     Console.ResetColor();
 }

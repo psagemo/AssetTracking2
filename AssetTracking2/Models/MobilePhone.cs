@@ -8,7 +8,7 @@ namespace AssetTracking2.Models
 {
     internal class MobilePhone
     {
-        public int Id { get; set; }
+        public int MobilePhoneId { get; set; }
         public int Price { get; set; }
         public DateTime PurchaseDate { get; set; }
         public string Brand { get; set; } = null!;

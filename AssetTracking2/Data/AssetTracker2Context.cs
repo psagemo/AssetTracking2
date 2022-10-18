@@ -15,7 +15,7 @@ namespace AssetTracking2.Data
         public DbSet<Laptop> Laptops { get; set; } = null!;
         public DbSet<Asset> Assets { get; set; } = null!;
         
-        string connectionString = "data source=LAPTOP-0OPDGJ0V;initial catalog=assets;trusted_connection=true";
+        string connectionString = "data source=LAPTOP-0OPDGJ0V;initial catalog=assets;trusted_connection=true; MultipleActiveResultSets=true";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
