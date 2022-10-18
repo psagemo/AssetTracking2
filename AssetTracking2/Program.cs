@@ -400,10 +400,10 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 1,
             PurchaseDate = Convert.ToDateTime("2022-04-11")
         };
-        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == MacBookAir.Model && l.PurchaseDate == MacBookAir.PurchaseDate)) { }
         else
         {
-            context.Laptops.Add(Lenovo700);
+            context.Laptops.Add(MacBookAir);
             context.SaveChanges();
 
 
@@ -429,10 +429,10 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 3,
             PurchaseDate = Convert.ToDateTime("2020-01-17")
         };
-        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == HPPavilion15.Model && l.PurchaseDate == HPPavilion15.PurchaseDate)) { }
         else
         {
-            context.Laptops.Add(Lenovo700);
+            context.Laptops.Add(HPPavilion15);
             context.SaveChanges();
 
 
@@ -458,10 +458,10 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2020-04-02")
         };
-        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == AcerAspire2.Model && l.PurchaseDate == AcerAspire2.PurchaseDate)) { }
         else
         {
-            context.Laptops.Add(Lenovo700);
+            context.Laptops.Add(AcerAspire2);
             context.SaveChanges();
 
 
@@ -487,10 +487,10 @@ void PopulateDbOption(AssetTracker2Context context)
             OfficeId = 2,
             PurchaseDate = Convert.ToDateTime("2022-07-05")
         };
-        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == AsusZenbookProDuo.Model && l.PurchaseDate == AsusZenbookProDuo.PurchaseDate)) { }
         else
         {
-            context.Laptops.Add(Lenovo700);
+            context.Laptops.Add(AsusZenbookProDuo);
             context.SaveChanges();
 
 
@@ -507,21 +507,7 @@ void PopulateDbOption(AssetTracker2Context context)
                 context.SaveChanges();
             }
         }
-
-        // Saving context
-        //try
-        //{            
-        //    context.SaveChanges();
-        //}
-        //catch (Exception e)
-        //{
-        //    Console.ForegroundColor = ConsoleColor.Red;
-        //    Console.WriteLine("Something went wrong:");
-        //    Console.WriteLine(e.ToString());
-        //    Console.ResetColor();
-        //}
     }
-
 
     // Do nothing/exit method if user types 'n' or 'no'
     else if(input.Trim().ToLower() == "n" || input.Trim().ToLower() == "no") 
@@ -593,6 +579,7 @@ void CheckForAssets()
     }
 }
 
+// Method to create new assets
 void CreateAsset(Asset? edit = null)
 {
     while (true)
@@ -1242,6 +1229,7 @@ void CreateAsset(Asset? edit = null)
     Main();
 }
 
+// Method to edit or delete assets
 void EditAsset()
 {
     Console.WriteLine("Select and option by typing the corresponding number:");
