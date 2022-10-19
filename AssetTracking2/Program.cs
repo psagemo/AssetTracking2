@@ -47,6 +47,7 @@ TODO-list:
     - Update
         * EditAsset-method
     - Delete
+    - MOVE PURCHASEDATE FROM LAPTOP/MOBILEPHONE TO ASSET
     
  */
 
@@ -198,11 +199,8 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "Samsung",
             Model = "Galaxy S20",
-            Price = 4199,
-            OfficeId = 3,
-            PurchaseDate = Convert.ToDateTime("2020-03-30")
         };
-        if (mobilePhones.Any(m => m.Model == SamsungGalaxyS20.Model && m.PurchaseDate == SamsungGalaxyS20.PurchaseDate)) { }
+        if (mobilePhones.Any(m =>m.Brand == SamsungGalaxyS20.Brand && m.Model == SamsungGalaxyS20.Model)) { }
         else
         {
             context.MobilePhones.Add(SamsungGalaxyS20);
@@ -213,7 +211,9 @@ void PopulateDbOption(AssetTracker2Context context)
             {
                 Type = "MobilePhone",
                 MobilePhoneId = SamsungGalaxyS20.MobilePhoneId,
-                OfficeId = SamsungGalaxyS20.OfficeId
+                Price = 4199,
+                OfficeId = 3,
+                PurchaseDate = Convert.ToDateTime("2020-03-30")
             };
             if (assets.Any(a => a.MobilePhoneId == SamsungGalaxyS20.MobilePhoneId)) { }
             else
@@ -226,22 +226,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "iPhone",
             Model = "12",
-            Price = 799,
-            OfficeId = 1,
-            PurchaseDate = Convert.ToDateTime("2022-05-12")
         };
-        if (mobilePhones.Any(m => m.Model == iPhone12.Model && m.PurchaseDate == iPhone12.PurchaseDate)) { }
+        if (mobilePhones.Any(m => m.Model == iPhone12.Model && m.Brand == iPhone12.Brand)) { }
         else
         {
             context.MobilePhones.Add(iPhone12);
             context.SaveChanges();
 
-
             Asset iPhone12Asset = new Asset()
             {
                 Type = "MobilePhone",
                 MobilePhoneId = iPhone12.MobilePhoneId,
-                OfficeId = iPhone12.OfficeId
+                Price = 799,
+                OfficeId = 1,
+                PurchaseDate = Convert.ToDateTime("2022-05-12")
             };
             if (assets.Any(a => a.MobilePhoneId == iPhone12.MobilePhoneId)) { }
             else
@@ -254,22 +252,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "Google",
             Model = "Pixel 6a",
-            Price = 499,
-            OfficeId = 2,
-            PurchaseDate = Convert.ToDateTime("2021-12-28")
         };
-        if (mobilePhones.Any(m => m.Model == GooglePixel6a.Model && m.PurchaseDate == GooglePixel6a.PurchaseDate)) { }
+        if (mobilePhones.Any(m => m.Model == GooglePixel6a.Model && m.Brand == GooglePixel6a.Brand)) { }
         else
         {
             context.MobilePhones.Add(GooglePixel6a);
             context.SaveChanges();
 
-
             Asset GooglePixel6aAsset = new Asset()
             {
                 Type = "MobilePhone",
                 MobilePhoneId = GooglePixel6a.MobilePhoneId,
-                OfficeId = GooglePixel6a.OfficeId
+                Price = 499,
+                OfficeId = 2,
+                PurchaseDate = Convert.ToDateTime("2021-12-28")
             };
             if (assets.Any(a => a.MobilePhoneId == GooglePixel6a.MobilePhoneId)) { }
             else
@@ -282,22 +278,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "Nokia",
             Model = "G21",
-            Price = 199,
-            OfficeId = 1,
-            PurchaseDate = Convert.ToDateTime("2020-10-04")
         };
-        if (mobilePhones.Any(m => m.Model == NokiaG21.Model && m.PurchaseDate == NokiaG21.PurchaseDate)) { }
+        if (mobilePhones.Any(m => m.Model == NokiaG21.Model && m.Brand == NokiaG21.Brand)) { }
         else
         {
             context.MobilePhones.Add(NokiaG21);
             context.SaveChanges();
 
-
             Asset NokiaG21Asset = new Asset()
             {
                 Type = "MobilePhone",
                 MobilePhoneId = NokiaG21.MobilePhoneId,
-                OfficeId = NokiaG21.OfficeId
+                Price = 199,
+                OfficeId = 1,
+                PurchaseDate = Convert.ToDateTime("2020-10-04")
             };
             if (assets.Any(a => a.MobilePhoneId == NokiaG21.MobilePhoneId)) { }
             else
@@ -310,22 +304,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "iPhone",
             Model = "8",
-            Price = 7499,
-            OfficeId = 3,
-            PurchaseDate = Convert.ToDateTime("2018-01-09")
         };
-        if (mobilePhones.Any(m => m.Model == iPhone8.Model && m.PurchaseDate == iPhone8.PurchaseDate)) { }
+        if (mobilePhones.Any(m => m.Model == iPhone8.Model && m.Brand == iPhone8.Brand)) { }
         else
         {
             context.MobilePhones.Add(iPhone8);
             context.SaveChanges();
 
-
             Asset iPhone8Asset = new Asset()
             {
                 Type = "MobilePhone",
                 MobilePhoneId = iPhone8.MobilePhoneId,
-                OfficeId = iPhone8.OfficeId
+                Price = 7499,
+                OfficeId = 3,
+                PurchaseDate = Convert.ToDateTime("2018-01-09")
             };
             if (assets.Any(a => a.MobilePhoneId == iPhone8.MobilePhoneId)) { }
             else
@@ -338,22 +330,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "Motorola",
             Model = "Moto G60s",
-            Price = 2499,
-            OfficeId = 3,
-            PurchaseDate = Convert.ToDateTime("2020-06-19")
         };
-        if (mobilePhones.Any(m => m.Model == MotoroloMotoG60s.Model && m.PurchaseDate == MotoroloMotoG60s.PurchaseDate)) { }
+        if (mobilePhones.Any(m => m.Model == MotoroloMotoG60s.Model && m.Brand == MotoroloMotoG60s.Brand)) { }
         else
         {
             context.MobilePhones.Add(MotoroloMotoG60s);
             context.SaveChanges();
 
-
             Asset MotoroloMotoG60sAsset = new Asset()
             {
                 Type = "MobilePhone",
                 MobilePhoneId = MotoroloMotoG60s.MobilePhoneId,
-                OfficeId = MotoroloMotoG60s.OfficeId
+                Price = 2499,
+                OfficeId = 3,
+                PurchaseDate = Convert.ToDateTime("2020-06-19")
             };
             if (assets.Any(a => a.MobilePhoneId == MotoroloMotoG60s.MobilePhoneId)) { }
             else
@@ -367,22 +357,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "Lenovo",
             Model = "700",
-            Price = 599,
-            OfficeId = 2,
-            PurchaseDate = Convert.ToDateTime("2019-03-19")
         }; 
-        if (laptops.Any(l => l.Model == Lenovo700.Model && l.PurchaseDate == Lenovo700.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == Lenovo700.Model && l.Brand == Lenovo700.Brand)) { }
         else
         {
             context.Laptops.Add(Lenovo700);
             context.SaveChanges();
 
-
             Asset Lenovo700Asset = new Asset()
             {
                 Type = "Laptop",
                 LaptopId = Lenovo700.LaptopId,
-                OfficeId = Lenovo700.OfficeId
+                Price = 599,
+                OfficeId = 2,
+                PurchaseDate = Convert.ToDateTime("2019-03-19")
             };
             if (assets.Any(a => a.LaptopId == Lenovo700.LaptopId)) { }
             else
@@ -396,51 +384,46 @@ void PopulateDbOption(AssetTracker2Context context)
         {            
             Brand = "MacBook",
             Model = "Air",
-            Price = 1599,
-            OfficeId = 1,
-            PurchaseDate = Convert.ToDateTime("2022-04-11")
         };
-        if (laptops.Any(l => l.Model == MacBookAir.Model && l.PurchaseDate == MacBookAir.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == MacBookAir.Model && l.Brand == MacBookAir.Brand)) { }
         else
         {
             context.Laptops.Add(MacBookAir);
             context.SaveChanges();
 
-
             Asset MacBookAirAsset = new Asset()
             {
                 Type = "Laptop",
                 LaptopId = MacBookAir.LaptopId,
-                OfficeId = MacBookAir.OfficeId
+                Price = 1599,
+                OfficeId = 1,
+                PurchaseDate = Convert.ToDateTime("2022-04-11")
             };
             if (assets.Any(a => a.LaptopId == MacBookAir.LaptopId)) { }
             else
             {
                 context.Assets.Add(MacBookAirAsset);
-                context.SaveChanges();
-            }
+                context.SaveChanges();            }
         }
 
         Laptop HPPavilion15 = new Laptop()
         {
             Brand = "HP",
             Model = "Pavilion 15",
-            Price = 7490,
-            OfficeId = 3,
-            PurchaseDate = Convert.ToDateTime("2020-01-17")
         };
-        if (laptops.Any(l => l.Model == HPPavilion15.Model && l.PurchaseDate == HPPavilion15.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == HPPavilion15.Model && l.Brand == HPPavilion15.Brand)) { }
         else
         {
             context.Laptops.Add(HPPavilion15);
             context.SaveChanges();
 
-
             Asset HPPavilion15Asset = new Asset()
             {
                 Type = "Laptop",
                 LaptopId = HPPavilion15.LaptopId,
-                OfficeId = HPPavilion15.OfficeId
+                Price = 7490,
+                OfficeId = 3,
+                PurchaseDate = Convert.ToDateTime("2020-01-17")
             };
             if (assets.Any(a => a.LaptopId == HPPavilion15.LaptopId)) { }
             else
@@ -454,22 +437,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "Acer",
             Model = "Aspire2",
-            Price = 499,
-            OfficeId = 2,
-            PurchaseDate = Convert.ToDateTime("2020-04-02")
         };
-        if (laptops.Any(l => l.Model == AcerAspire2.Model && l.PurchaseDate == AcerAspire2.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == AcerAspire2.Model && l.Brand == AcerAspire2.Brand)) { }
         else
         {
             context.Laptops.Add(AcerAspire2);
             context.SaveChanges();
 
-
             Asset AcerAspire2Asset = new Asset()
             {
                 Type = "Laptop",
                 LaptopId = AcerAspire2.LaptopId,
-                OfficeId = AcerAspire2.OfficeId
+                Price = 499,
+                OfficeId = 2,
+                PurchaseDate = Convert.ToDateTime("2020-04-02")
             };
             if (assets.Any(a => a.LaptopId == AcerAspire2.LaptopId)) { }
             else
@@ -483,22 +464,20 @@ void PopulateDbOption(AssetTracker2Context context)
         {
             Brand = "Asus",
             Model = "Zenbook Pro Duo",
-            Price = 3199,
-            OfficeId = 2,
-            PurchaseDate = Convert.ToDateTime("2022-07-05")
         };
-        if (laptops.Any(l => l.Model == AsusZenbookProDuo.Model && l.PurchaseDate == AsusZenbookProDuo.PurchaseDate)) { }
+        if (laptops.Any(l => l.Model == AsusZenbookProDuo.Model && l.Brand == AsusZenbookProDuo.Brand)) { }
         else
         {
             context.Laptops.Add(AsusZenbookProDuo);
             context.SaveChanges();
 
-
             Asset AsusZenbookProDuoAsset = new Asset()
             {
                 Type = "Laptop",
                 LaptopId = AsusZenbookProDuo.LaptopId,
-                OfficeId = AsusZenbookProDuo.OfficeId
+                Price = 3199,
+                OfficeId = 2,
+                PurchaseDate = Convert.ToDateTime("2022-07-05")
             };
             if (assets.Any(a => a.LaptopId == AsusZenbookProDuo.LaptopId)) { }
             else
@@ -566,6 +545,7 @@ void CheckForAssets()
             {
                 context.Remove(l);
             }
+            context.SaveChanges();
         }
 
         // Print error + re-launch CheckForAssets on wrong input
@@ -608,19 +588,17 @@ void CreateAsset(Asset? edit = null)
         {
             type = edit.Type;
             office = edit.OfficeId;
+            purchaseDate = edit.PurchaseDate;
+            price = edit.Price;
             if (edit.Type == "MobilePhone") 
             { 
                 brand = edit.MobilePhone.Brand;
                 model = edit.MobilePhone.Model;
-                purchaseDate = edit.MobilePhone.PurchaseDate;
-                price = edit.MobilePhone.Price;
             }
             else if (edit.Type == "Laptop")
             {
                 brand = edit.Laptop.Brand;
                 model = edit.Laptop.Model;
-                purchaseDate = edit.Laptop.PurchaseDate;
-                price = edit.Laptop.Price;
             }
 
             // Select what should be edited 
@@ -1156,19 +1134,17 @@ void CreateAsset(Asset? edit = null)
         {
             edit.Type = type;
             edit.OfficeId = office;
+            edit.PurchaseDate = purchaseDate;
+            edit.Price = price;
             if (edit.Type == "MobilePhone")
             {
                 edit.MobilePhone.Brand = brand;
                 edit.MobilePhone.Model = model;
-                edit.MobilePhone.PurchaseDate = purchaseDate;
-                edit.MobilePhone.Price = price;
             }
             else if (edit.Type == "Laptop")
             {
                 edit.Laptop.Brand = brand;
                 edit.Laptop.Model = model;
-                edit.Laptop.PurchaseDate = purchaseDate;
-                edit.Laptop.Price = price;
             }
             context.SaveChanges();
         }
@@ -1184,10 +1160,7 @@ void CreateAsset(Asset? edit = null)
                     MobilePhone mobilePhone = new MobilePhone()
                     {
                         Brand = brand,
-                        Model = model,
-                        Price = price,
-                        OfficeId = office,
-                        PurchaseDate = purchaseDate
+                        Model = model
                     };
                     context.MobilePhones.Add(mobilePhone);
 
@@ -1196,7 +1169,9 @@ void CreateAsset(Asset? edit = null)
                     {
                         Type = "MobilePhone",
                         MobilePhoneId = mobilePhone.MobilePhoneId,
-                        OfficeId = mobilePhone.OfficeId
+                        Price = price,
+                        OfficeId = office,
+                        PurchaseDate = purchaseDate
                     };
                     context.Assets.Add(asset);
                 }
@@ -1207,10 +1182,7 @@ void CreateAsset(Asset? edit = null)
                     Laptop laptop = new Laptop()
                     {
                         Brand = brand,
-                        Model = model,
-                        Price = price,
-                        OfficeId = office,
-                        PurchaseDate = purchaseDate
+                        Model = model
                     };
                     context.Laptops.Add(laptop);
 
@@ -1219,7 +1191,9 @@ void CreateAsset(Asset? edit = null)
                     {
                         Type = "Laptop",
                         LaptopId = laptop.LaptopId,
-                        OfficeId = laptop.OfficeId
+                        Price = price,
+                        OfficeId = office,
+                        PurchaseDate = purchaseDate
                     };
                     context.Assets.Add(asset);
                 }
@@ -1281,11 +1255,11 @@ void EditAsset()
             Console.BackgroundColor = ConsoleColor.DarkYellow;
             if (editAsset.Type == "MobilePhone")
             {
-                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.MobilePhone.Brand.PadRight(20) + editAsset.MobilePhone.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.MobilePhone.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.MobilePhone.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
+                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.MobilePhone.Brand.PadRight(20) + editAsset.MobilePhone.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
             }
             else if (editAsset.Type == "Laptop")
             {
-                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.Laptop.Brand.PadRight(20) + editAsset.Laptop.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.Laptop.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.Laptop.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
+                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.Laptop.Brand.PadRight(20) + editAsset.Laptop.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
             }
             Console.ResetColor();
             if (action == "EDIT")
@@ -1356,8 +1330,9 @@ void PrintAssets()
 {
     // Get assets from database
     var assets = context.Assets.AsQueryable()
-        .Where (a => a != null)
-        .OrderBy(a => a.Type);
+        .Where(a => a != null)
+        .OrderBy(a => a.Office);
+        //.ThenBy(a => a.PurchaseDate); ----------------------------------------------------- MOVE PURCHASEDATE TO ASSET
 
     var mobilePhones = context.MobilePhones.AsQueryable()
         .Where(m => m != null);
@@ -1366,121 +1341,127 @@ void PrintAssets()
         .Where(l => l != null);
 
     var offices = context.Offices.AsQueryable()
-        .Where(l => l != null);
+        .Where(l => l != null);      
 
-    Console.WriteLine("Assets: " + assets); //Assets: Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryable`1[AssetTracking2.Models.Asset]
-
-
-    // Print each asset
-    foreach (Asset a in assets)
+    // Print if assets exist
+    if (assets.Count() > 0)
     {
-        
-        if (a.Type == "MobilePhone")
+        // Print each asset
+        foreach (Asset a in assets)
         {
-            // Get data for mobile phone
-            int mobilePhoneId = (int)a.MobilePhoneId;
-
-            List<MobilePhone> mobilePhoneList = mobilePhones.Where(m => m.MobilePhoneId == mobilePhoneId).ToList();
-
-            if (mobilePhoneList.Count == 1)
+            if (a.Type == "MobilePhone")
             {
-                MobilePhone mobilePhone = mobilePhoneList.First();
-
-                string Type = a.Type;
-                string Brand = mobilePhone.Brand;
-                string Model = mobilePhone.Model;
-                DateTime PurchaseDate = mobilePhone.PurchaseDate;
-                int Price = mobilePhone.Price;
-                int OfficeId = mobilePhone.OfficeId;
-                List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
-                Office Office = officeList.First();
-                string Location = Office.Location;
-                string Currency = Office.Currency;
-
-                // Print product in red if purchase date is within 3 months from being 3 years old
-                if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+                // Get data for mobile phone
+                int mobilePhoneId = (int)a.MobilePhoneId;
+                List<MobilePhone> mobilePhoneList = mobilePhones.Where(m => m.MobilePhoneId == mobilePhoneId).ToList();
+                if (mobilePhoneList.Count == 1)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
-                    Console.ResetColor();
-                }
+                    MobilePhone mobilePhone = mobilePhoneList.First();
+                    string Type = a.Type;
+                    string Brand = mobilePhone.Brand;
+                    string Model = mobilePhone.Model;
+                    DateTime PurchaseDate = a.PurchaseDate;
+                    int Price = a.Price;
+                    int OfficeId = a.OfficeId;
+                    List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
+                    Office Office = officeList.First();
+                    string Location = Office.Location;
+                    string Currency = Office.Currency;
 
-                // Print product in yellow if purchase date is within 6 months from being 3 years old
-                else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
-                    Console.ResetColor();
-                }
+                    // Print product in red if purchase date is within 3 months from being 3 years old
+                    if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.ResetColor();
+                    }
 
-                // Print product
+                    // Print product in yellow if purchase date is within 6 months from being 3 years old
+                    else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
+                    {
+                        Console.BackgroundColor = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.ResetColor();
+                    }
+
+                    // Print product
+                    else
+                    {
+                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                    }
+                }
                 else
                 {
-                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);                    
+                    Console.WriteLine("Something went wrong. Count = " + mobilePhoneList.Count());
+                }
+            }
+            else if (a.Type == "Laptop")
+            {
+                // Get data for mobile phone
+                int laptopId = (int)a.LaptopId;
+                List<Laptop> laptopList = laptops.Where(m => m.LaptopId == laptopId).ToList();
+                if (laptopList.Count == 1)
+                {
+                    Laptop laptop = laptopList.First();
+                    string Type = a.Type;
+                    string Brand = laptop.Brand;
+                    string Model = laptop.Model;
+                    DateTime PurchaseDate = a.PurchaseDate;
+                    int Price = a.Price;
+                    int OfficeId = a.OfficeId;
+                    List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
+                    Office Office = officeList.First();
+                    string Location = Office.Location;
+                    string Currency = Office.Currency;
+
+                    // Print product in red if purchase date is within 3 months from being 3 years old
+                    if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.ResetColor();
+                    }
+
+                    // Print product in yellow if purchase date is within 6 months from being 3 years old
+                    else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
+                    {
+                        Console.BackgroundColor = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.ResetColor();
+                    }
+
+                    // Print product
+                    else
+                    {
+                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Something went wrong. Count = " + laptopList.Count());
                 }
             }
             else
             {
-                Console.WriteLine("Something went wrong. Count = " + mobilePhoneList.Count());
+                Console.WriteLine("No assets were found");
             }
         }
-        else if (a.Type == "Laptop")
-        {
-            // Get data for mobile phone
-            int laptopId = (int)a.LaptopId;
-
-            List<Laptop> laptopList = laptops.Where(m => m.LaptopId == laptopId).ToList();
-
-            if (laptopList.Count == 1)
-            {
-                Laptop laptop = laptopList.First();
-
-                string Type = a.Type;
-                string Brand = laptop.Brand;
-                string Model = laptop.Model;
-                DateTime PurchaseDate = laptop.PurchaseDate;
-                int Price = laptop.Price;
-                int OfficeId = laptop.OfficeId;
-                List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
-                Office Office = officeList.First();
-                string Location = Office.Location;
-                string Currency = Office.Currency;
-
-                // Print product in red if purchase date is within 3 months from being 3 years old
-                if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
-                    Console.ResetColor();
-                }
-
-                // Print product in yellow if purchase date is within 6 months from being 3 years old
-                else if (PurchaseDate.AddMonths(-6) < DateTime.Now.AddYears(-3))
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);
-                    Console.ResetColor();
-                }
-
-                // Print product
-                else
-                {
-                    Console.WriteLine(Type.PadRight(20) + Brand.PadRight(20) + Model.PadRight(20) + Location.PadRight(20) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + Price.ToString().PadRight(20) + Currency);                    
-                }
-            }
-            else
-            {
-                Console.WriteLine("Something went wrong. Count = " + laptopList.Count());
-            }
-        }
-        else
-        {
-            Console.WriteLine("No assets were found");
-        }
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine();
     }
-    Console.WriteLine();
-    Console.WriteLine();
-    Console.WriteLine();
+    else
+    {
+        Console.WriteLine();
+        Console.WriteLine("No assets found, try adding some!");
+        Console.WriteLine();
+    }
+
+    
 
     // Go back to main menu
     Main();
