@@ -39,8 +39,7 @@ Level 3
     Your application should handle FULL CRUD.
     Your application should have some reporting features.
 
-
-TODO-list:    
+Done:
     - Print-Table functionality
     - Create
     - Read
@@ -48,6 +47,11 @@ TODO-list:
         * EditAsset-method
     - Delete
     - MOVE PURCHASEDATE FROM LAPTOP/MOBILEPHONE TO ASSET
+    - Fix bug when creating new asset (on SaveChanges())
+
+TODO-list:    
+    - Fix bug when creating new asset (on SaveChanges())
+    - Final Testing
     
  */
 
@@ -71,9 +75,6 @@ PopulateDbOption(context);
 
 // Adding Offices to context
 AddOffices(context);
-
-// Saving context
-//context.SaveChanges();
 
 // Launching program
 Main();
@@ -707,7 +708,6 @@ void CreateAsset(Asset? edit = null)
         if (brand.Trim() == "" && type != "")
         {
             // Add new phone
-            // Samsung iPhone Google Nokia Motorola
             if (type == "Phone")
             {
                 Console.WriteLine("Enter the number corresponding to the brand of the phone you would like to add. Or press enter to write the name manually");
@@ -1163,6 +1163,7 @@ void CreateAsset(Asset? edit = null)
                         Model = model
                     };
                     context.MobilePhones.Add(mobilePhone);
+                    context.SaveChanges();
 
                     // Create asset from mobile phone
                     Asset asset = new Asset()
@@ -1174,6 +1175,7 @@ void CreateAsset(Asset? edit = null)
                         PurchaseDate = purchaseDate
                     };
                     context.Assets.Add(asset);
+                    context.SaveChanges();
                 }
 
                 // Create new laptop
@@ -1185,6 +1187,7 @@ void CreateAsset(Asset? edit = null)
                         Model = model
                     };
                     context.Laptops.Add(laptop);
+                    context.SaveChanges();
 
                     // Create asset from laptop
                     Asset asset = new Asset()
@@ -1196,7 +1199,8 @@ void CreateAsset(Asset? edit = null)
                         PurchaseDate = purchaseDate
                     };
                     context.Assets.Add(asset);
-                }
+                    context.SaveChanges();
+                }                
             }
         }        
     }
@@ -1331,8 +1335,8 @@ void PrintAssets()
     // Get assets from database
     var assets = context.Assets.AsQueryable()
         .Where(a => a != null)
-        .OrderBy(a => a.Office);
-        //.ThenBy(a => a.PurchaseDate); ----------------------------------------------------- MOVE PURCHASEDATE TO ASSET
+        .OrderBy(a => a.Office)
+        .ThenBy(a => a.PurchaseDate); 
 
     var mobilePhones = context.MobilePhones.AsQueryable()
         .Where(m => m != null);
