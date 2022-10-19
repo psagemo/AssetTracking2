@@ -50,7 +50,7 @@ Done:
     - Fix bug when creating new asset (on SaveChanges())
 
 TODO-list:    
-    - Fix bug when creating new asset (on SaveChanges())
+    - Fix bug when editing asset
     - Final Testing
     
  */
@@ -68,7 +68,6 @@ Console.WriteLine();
 
 // Initializing context
 using AssetTracker2Context context = new AssetTracker2Context();
-
 
 // Option to populate db with generated assets
 PopulateDbOption(context);
@@ -163,9 +162,6 @@ static void AddOffices(AssetTracker2Context context)
 // Method to add pre-generated assets
 void PopulateDbOption(AssetTracker2Context context)
 {
-    
-
-
     // Get assets, mobile phones and laptops from database
     var assets = context.Assets
         .Where(a => a != null)
@@ -175,19 +171,10 @@ void PopulateDbOption(AssetTracker2Context context)
         .Where(m => m != null);
 
     var laptops = context.Laptops
-        .Where(l => l != null);
-
-    
+        .Where(l => l != null);    
 
     var assetCount = context.Assets.Count();
-
-    //Console.WriteLine("OfficeCount: " + officeCount);
-
-    // Add offices if they don't already exist
-    if (assetCount == 0)
-    {
-
-    }
+    
     // Prompt user to add pre-generated assets to database
     Console.WriteLine("Would you like to populate the database with pre-generated assets? [Y/N]");
     string input = Console.ReadLine();
@@ -489,11 +476,10 @@ void PopulateDbOption(AssetTracker2Context context)
         }
     }
 
-    // Do nothing/exit method if user types 'n' or 'no'
+    // Check for existing assets if user types 'n' or 'no'
     else if(input.Trim().ToLower() == "n" || input.Trim().ToLower() == "no") 
     {
-        CheckForAssets();
-        
+        CheckForAssets();        
     }
     
     // Print error and restart PopulateDbOption-method
@@ -590,6 +576,7 @@ void CreateAsset(Asset? edit = null)
             type = edit.Type;
             office = edit.OfficeId;
             purchaseDate = edit.PurchaseDate;
+            currency = edit.Office.Currency;
             price = edit.Price;
             if (edit.Type == "MobilePhone") 
             { 
@@ -622,12 +609,15 @@ void CreateAsset(Asset? edit = null)
                 {
                     case "e":
                     case "exit":
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("Edits saved!");
+                        Console.ResetColor();
                         Main();
                         break;
 
                     case "1":
                         previousType = type;
-                        type = "";                        
+                        type = "";
                         break;
 
                     case "2":
@@ -1147,6 +1137,9 @@ void CreateAsset(Asset? edit = null)
                 edit.Laptop.Model = model;
             }
             context.SaveChanges();
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.WriteLine("Asset edited! If you are finished editing type 'E' or 'Exit' to Save Changes and Exit");
+            Console.ResetColor();
         }
 
         // Create asset if all values are set
@@ -1208,37 +1201,45 @@ void CreateAsset(Asset? edit = null)
 }
 
 // Method to edit or delete assets
-void EditAsset()
+void EditAsset(Boolean? printed = false)
 {
-    Console.WriteLine("Select and option by typing the corresponding number:");
-    Exit();
-    Console.WriteLine("1. Edit existing asset");
-    Console.WriteLine("2. Delete existing asset");
-
-    string input = Console.ReadLine();
-    Console.WriteLine();
-
     string action = "";
-        
-    // Edit functionality
-    if (input.Trim().ToLower() == "1" || input.Trim().ToLower() == "edit")
+    string input;
+
+    if (printed == false)
+    {
+        Console.WriteLine("Select and option by typing the corresponding number:");
+        Exit();
+        Console.WriteLine("1. Edit existing asset");
+        Console.WriteLine("2. Delete existing asset");
+        input = Console.ReadLine();
+        Console.WriteLine();        
+
+        // Edit functionality
+        if (input.Trim().ToLower() == "1" || input.Trim().ToLower() == "edit")
+        {
+            action = "EDIT";
+        }
+
+        // Delete functionality
+        else if (input.Trim().ToLower() == "2" || input.Trim().ToLower() == "delete")
+        {
+            action = "DELETE";
+        }
+
+        // Exit to main menu if user types 'E' or 'Exit'
+        else if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
+        {
+            Main();
+        }
+
+        PrintAssets(true);
+    }
+    else
     {
         action = "EDIT";
     }
-
-    // Delete functionality
-    else if (input.Trim().ToLower() == "2" || input.Trim().ToLower() == "delete")
-    {
-        action = "DELETE";
-    }
-
-    // Exit to main menu if user types 'E' or 'Exit'
-    else if (input.ToLower().Trim() == "exit" || input.ToLower().Trim() == "e")
-    {
-        Main();
-    }
-
-    PrintAssets();
+    
     Console.WriteLine("Type the ID of the asset you would like to " + action);
     input = Console.ReadLine();
     Console.WriteLine();
@@ -1248,33 +1249,59 @@ void EditAsset()
     // Match input to asset id
     if (int.TryParse(input.Trim(), out inputId))
     {
-        var editAsset = context.Assets
+        Asset? asset = null;       
+        MobilePhone? mobile = null;
+        Laptop? laptop = null;
+
+        asset = context.Assets
             .Where(a => a.Id == inputId)
             .FirstOrDefault();
 
         // Check if selected asset exists, print asset and call CreateAsset to edit
-        if (editAsset is Asset)
+        if (asset != null)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.DarkYellow;
-            if (editAsset.Type == "MobilePhone")
-            {
-                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.MobilePhone.Brand.PadRight(20) + editAsset.MobilePhone.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
-            }
-            else if (editAsset.Type == "Laptop")
-            {
-                Console.WriteLine(editAsset.Id.ToString().PadRight(10) + editAsset.Type.PadRight(20) + editAsset.Laptop.Brand.PadRight(20) + editAsset.Laptop.Model.PadRight(20) + editAsset.Office.Location.PadRight(20) + editAsset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(20) + editAsset.Price.ToString().PadRight(20) + editAsset.Office.Currency.PadRight(20));
-            }
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("ID:".PadRight(10) + "Type:".PadRight(15) + "Brand:".PadRight(15) + "Model:".PadRight(20) + "Location:".PadRight(10) + "PurchaseDate:".PadRight(15) + "Price:".ToString().PadRight(15) + "Currency:");
             Console.ResetColor();
+
+            if (asset.Type == "MobilePhone")
+            {
+                // Get mobile phone from db
+                mobile = context.MobilePhones
+                    .Where(m => m.MobilePhoneId == asset.MobilePhoneId)
+                    .FirstOrDefault();
+
+                // Print mobile phone data
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine(asset.Id.ToString().PadRight(10) + asset.Type.PadRight(15) + asset.MobilePhone.Brand.PadRight(15) + asset.MobilePhone.Model.PadRight(20) + asset.Office.Location.PadRight(10) + asset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + asset.Price.ToString().PadRight(15) + asset.Office.Currency.PadRight(5));
+                Console.ResetColor();
+                Console.WriteLine();
+            }
+            else if (asset.Type == "Laptop")
+            {
+                // Get laptop from db
+                laptop = context.Laptops
+                    .Where(l => l.LaptopId == asset.LaptopId)
+                    .FirstOrDefault();
+
+                // Print laptop data
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine(asset.Id.ToString().PadRight(10) + asset.Type.PadRight(15) + asset.Laptop.Brand.PadRight(20) + asset.Laptop.Model.PadRight(20) + asset.Office.Location.PadRight(10) + asset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + asset.Price.ToString().PadRight(15) + asset.Office.Currency.PadRight(5));
+                Console.ResetColor();
+                Console.WriteLine();
+            }
             if (action == "EDIT")
             {
                 Console.WriteLine("To EDIT the selected asset type 'Y' or 'Yes'");
                 Console.WriteLine("To go back and choose another asset to edit or delete type 'N' or 'No'");
                 Exit();
+                input = Console.ReadLine();
 
                 if (input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
                 {
-                    CreateAsset(editAsset);
+                    CreateAsset(asset);
                 }
                 else if (input.Trim().ToLower() == "n" || input.Trim().ToLower() == "no")
                 {
@@ -1293,7 +1320,18 @@ void EditAsset()
 
                 if (input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
                 {
-                    context.Remove(editAsset);
+                    // Remove asset and mobile/latop
+                    if (asset.Type == "MobilePhone")
+                    {
+                        context.Remove(mobile);
+                    }
+                    else if( asset.Type == "Laptop")
+                    {
+                        context.Remove(laptop);
+                    }
+                    context.Remove(asset);
+                    
+                    // Save changes
                     context.SaveChanges();
                 }
                 else if (input.Trim().ToLower() == "n" || input.Trim().ToLower() == "no")
@@ -1330,7 +1368,7 @@ void EditAsset()
 }
 
 // Method to print assets
-void PrintAssets()
+void PrintAssets(Boolean? edit = false)
 {
     // Get assets from database
     var assets = context.Assets.AsQueryable()
@@ -1351,8 +1389,22 @@ void PrintAssets()
     if (assets.Count() > 0)
     {
         // Print each asset
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.WriteLine("ID:".PadRight(10) + "Type:".PadRight(15) + "Brand:".PadRight(15) + "Model:".PadRight(20) + "Location:".PadRight(10) + "PurchaseDate:".PadRight(15) + "Price:".ToString().PadRight(15) + "Currency:");
+        Console.ResetColor();
+
         foreach (Asset a in assets)
         {
+            int Id = a.Id;
+            string Type = a.Type;
+            int Price = a.Price;
+            int OfficeId = a.OfficeId;
+            DateTime PurchaseDate = a.PurchaseDate;
+            List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
+            Office Office = officeList.First();
+            string Location = Office.Location;
+            string Currency = Office.Currency;
+
             if (a.Type == "MobilePhone")
             {
                 // Get data for mobile phone
@@ -1361,23 +1413,16 @@ void PrintAssets()
                 if (mobilePhoneList.Count == 1)
                 {
                     MobilePhone mobilePhone = mobilePhoneList.First();
-                    string Type = a.Type;
+                    
                     string Brand = mobilePhone.Brand;
                     string Model = mobilePhone.Model;
-                    DateTime PurchaseDate = a.PurchaseDate;
-                    int Price = a.Price;
-                    int OfficeId = a.OfficeId;
-                    List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
-                    Office Office = officeList.First();
-                    string Location = Office.Location;
-                    string Currency = Office.Currency;
 
                     // Print product in red if purchase date is within 3 months from being 3 years old
                     if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
                     {
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
                         Console.ResetColor();
                     }
 
@@ -1386,14 +1431,14 @@ void PrintAssets()
                     {
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
                         Console.ResetColor();
                     }
 
                     // Print product
                     else
                     {
-                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
                     }
                 }
                 else
@@ -1409,23 +1454,15 @@ void PrintAssets()
                 if (laptopList.Count == 1)
                 {
                     Laptop laptop = laptopList.First();
-                    string Type = a.Type;
                     string Brand = laptop.Brand;
                     string Model = laptop.Model;
-                    DateTime PurchaseDate = a.PurchaseDate;
-                    int Price = a.Price;
-                    int OfficeId = a.OfficeId;
-                    List<Office> officeList = offices.Where(o => o.OfficeId == OfficeId).ToList();
-                    Office Office = officeList.First();
-                    string Location = Office.Location;
-                    string Currency = Office.Currency;
 
                     // Print product in red if purchase date is within 3 months from being 3 years old
                     if (PurchaseDate.AddMonths(-3) < DateTime.Now.AddYears(-3))
                     {
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
                         Console.ResetColor();
                     }
 
@@ -1434,14 +1471,14 @@ void PrintAssets()
                     {
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
                         Console.ResetColor();
                     }
 
                     // Print product
                     else
                     {
-                        Console.WriteLine(Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency);
                     }
                 }
                 else
@@ -1465,10 +1502,20 @@ void PrintAssets()
         Console.WriteLine();
     }
 
-    
+    // Return to EditAsset
+    if (edit == true)
+    {
+        EditAsset(true);
+    }
 
     // Go back to main menu
-    Main();
+    else
+    {
+        
+        Main();
+    }
+
+    
 }
 
 // Print exit instructions to user
