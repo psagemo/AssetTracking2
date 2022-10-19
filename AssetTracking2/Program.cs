@@ -47,10 +47,10 @@ Done:
         * EditAsset-method
     - Delete
     - MOVE PURCHASEDATE FROM LAPTOP/MOBILEPHONE TO ASSET
+    - Fix bug when editing asset
     - Fix bug when creating new asset (on SaveChanges())
 
 TODO-list:    
-    - Fix bug when editing asset
     - Final Testing
     
  */
@@ -1137,9 +1137,12 @@ void CreateAsset(Asset? edit = null)
                 edit.Laptop.Model = model;
             }
             context.SaveChanges();
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.WriteLine("Asset edited! If you are finished editing type 'E' or 'Exit' to Save Changes and Exit");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine();
+            Console.WriteLine("Asset edited!");
+            Console.WriteLine();
             Console.ResetColor();
+            Console.WriteLine("If you are finished editing type 'E' or 'Exit' to Save Changes and Exit");
         }
 
         // Create asset if all values are set
@@ -1193,7 +1196,13 @@ void CreateAsset(Asset? edit = null)
                     };
                     context.Assets.Add(asset);
                     context.SaveChanges();
-                }                
+                }
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine();
+                Console.WriteLine("Asset created!");
+                Console.WriteLine();
+                Console.ResetColor();
             }
         }        
     }
@@ -1201,30 +1210,47 @@ void CreateAsset(Asset? edit = null)
 }
 
 // Method to edit or delete assets
-void EditAsset(Boolean? printed = false)
+void EditAsset(Boolean? printed = false, string? passedAction = null)
 {
     string action = "";
+    if (passedAction != null)
+    {
+        action = passedAction;
+    }
     string input;
 
-    if (printed == false)
+    if (action == "")
     {
         Console.WriteLine("Select and option by typing the corresponding number:");
         Exit();
         Console.WriteLine("1. Edit existing asset");
         Console.WriteLine("2. Delete existing asset");
         input = Console.ReadLine();
-        Console.WriteLine();        
+        Console.WriteLine();
 
         // Edit functionality
         if (input.Trim().ToLower() == "1" || input.Trim().ToLower() == "edit")
         {
             action = "EDIT";
+
+            // Print assets if not already done so
+            if (printed == false)
+            {
+                PrintAssets(true);
+            }
+            
         }
 
         // Delete functionality
         else if (input.Trim().ToLower() == "2" || input.Trim().ToLower() == "delete")
         {
             action = "DELETE";
+
+            // Print assets if not already done so
+            if (printed == false)
+            {
+                PrintAssets(false);
+            }
         }
 
         // Exit to main menu if user types 'E' or 'Exit'
@@ -1233,12 +1259,18 @@ void EditAsset(Boolean? printed = false)
             Main();
         }
 
-        PrintAssets(true);
+        // Print error and restart EditAsset
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Wrong input");
+            Console.ResetColor();
+            EditAsset(false, null);
+        }
     }
-    else
-    {
-        action = "EDIT";
-    }
+
+    
+    
     
     Console.WriteLine("Type the ID of the asset you would like to " + action);
     input = Console.ReadLine();
@@ -1260,7 +1292,8 @@ void EditAsset(Boolean? printed = false)
         // Check if selected asset exists, print asset and call CreateAsset to edit
         if (asset != null)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine("ID:".PadRight(10) + "Type:".PadRight(15) + "Brand:".PadRight(15) + "Model:".PadRight(20) + "Location:".PadRight(10) + "PurchaseDate:".PadRight(15) + "Price:".ToString().PadRight(15) + "Currency:");
             Console.ResetColor();
 
@@ -1274,7 +1307,7 @@ void EditAsset(Boolean? printed = false)
                 // Print mobile phone data
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.BackgroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(asset.Id.ToString().PadRight(10) + asset.Type.PadRight(15) + asset.MobilePhone.Brand.PadRight(15) + asset.MobilePhone.Model.PadRight(20) + asset.Office.Location.PadRight(10) + asset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + asset.Price.ToString().PadRight(15) + asset.Office.Currency.PadRight(5));
+                Console.WriteLine(asset.Id.ToString().PadRight(10) + asset.Type.PadRight(15) + asset.MobilePhone.Brand.PadRight(15) + asset.MobilePhone.Model.PadRight(20) + asset.Office.Location.PadRight(10) + asset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + asset.Price.ToString().PadRight(15) + asset.Office.Currency.PadRight(9));
                 Console.ResetColor();
                 Console.WriteLine();
             }
@@ -1288,7 +1321,7 @@ void EditAsset(Boolean? printed = false)
                 // Print laptop data
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.BackgroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(asset.Id.ToString().PadRight(10) + asset.Type.PadRight(15) + asset.Laptop.Brand.PadRight(20) + asset.Laptop.Model.PadRight(20) + asset.Office.Location.PadRight(10) + asset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + asset.Price.ToString().PadRight(15) + asset.Office.Currency.PadRight(5));
+                Console.WriteLine(asset.Id.ToString().PadRight(10) + asset.Type.PadRight(15) + asset.Laptop.Brand.PadRight(20) + asset.Laptop.Model.PadRight(20) + asset.Office.Location.PadRight(10) + asset.PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + asset.Price.ToString().PadRight(15) + asset.Office.Currency.PadRight(9));
                 Console.ResetColor();
                 Console.WriteLine();
             }
@@ -1317,6 +1350,7 @@ void EditAsset(Boolean? printed = false)
                 Console.WriteLine("To DELETE the selected asset type 'Y' or 'Yes'");
                 Console.WriteLine("To go back and choose another asset to edit or delete type 'N' or 'No'");
                 Exit();
+                input = Console.ReadLine();
 
                 if (input.Trim().ToLower() == "y" || input.Trim().ToLower() == "yes")
                 {
@@ -1333,6 +1367,13 @@ void EditAsset(Boolean? printed = false)
                     
                     // Save changes
                     context.SaveChanges();
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine();
+                    Console.WriteLine("Asset deleted!");
+                    Console.WriteLine();
+                    Console.ResetColor();
+                    EditAsset(true, null);
                 }
                 else if (input.Trim().ToLower() == "n" || input.Trim().ToLower() == "no")
                 {
@@ -1368,7 +1409,7 @@ void EditAsset(Boolean? printed = false)
 }
 
 // Method to print assets
-void PrintAssets(Boolean? edit = false)
+void PrintAssets(Boolean? edit = null)
 {
     // Get assets from database
     var assets = context.Assets.AsQueryable()
@@ -1389,7 +1430,8 @@ void PrintAssets(Boolean? edit = false)
     if (assets.Count() > 0)
     {
         // Print each asset
-        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.BackgroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Black;
         Console.WriteLine("ID:".PadRight(10) + "Type:".PadRight(15) + "Brand:".PadRight(15) + "Model:".PadRight(20) + "Location:".PadRight(10) + "PurchaseDate:".PadRight(15) + "Price:".ToString().PadRight(15) + "Currency:");
         Console.ResetColor();
 
@@ -1422,7 +1464,7 @@ void PrintAssets(Boolean? edit = false)
                     {
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(9));
                         Console.ResetColor();
                     }
 
@@ -1431,7 +1473,7 @@ void PrintAssets(Boolean? edit = false)
                     {
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(9));
                         Console.ResetColor();
                     }
 
@@ -1462,7 +1504,7 @@ void PrintAssets(Boolean? edit = false)
                     {
                         Console.BackgroundColor = ConsoleColor.Red;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(9));
                         Console.ResetColor();
                     }
 
@@ -1471,7 +1513,7 @@ void PrintAssets(Boolean? edit = false)
                     {
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(5));
+                        Console.WriteLine(Id.ToString().PadRight(10) + Type.PadRight(15) + Brand.PadRight(15) + Model.PadRight(20) + Location.PadRight(10) + PurchaseDate.ToString("MM/dd/yyyy").PadRight(15) + Price.ToString().PadRight(15) + Currency.PadRight(9));
                         Console.ResetColor();
                     }
 
@@ -1502,16 +1544,21 @@ void PrintAssets(Boolean? edit = false)
         Console.WriteLine();
     }
 
-    // Return to EditAsset
+    // Return to EditAsset with edit-action
     if (edit == true)
     {
-        EditAsset(true);
+        EditAsset(true, "EDIT");
+    }
+
+    // Return to EditAsset with delete-action
+    else if (edit == false)
+    {
+        EditAsset(true, "DELETE");
     }
 
     // Go back to main menu
     else
-    {
-        
+    {        
         Main();
     }
 
